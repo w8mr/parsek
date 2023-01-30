@@ -21,5 +21,11 @@ data class Context<T, S>(val source: S, val errorLevel: Int = 1, var index: Int 
         return Parser.Success(value)
     }
 
+    fun hasNext() =
+        when (source) {
+            is CharSequence -> index < source.length
+            is List<*> -> index < source.size
+            else -> TODO()
+        }
     var result: Any? = null
 }
