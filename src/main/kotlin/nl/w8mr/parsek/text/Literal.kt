@@ -3,8 +3,9 @@ package nl.w8mr.parsek.text
 import nl.w8mr.parsek.Context
 import nl.w8mr.parsek.Parser
 
-fun literal(literal: String) = object: Parser<Char, CharSequence, Unit>() {
-    override fun apply(context: Context<Char, CharSequence>): Result<Unit> {
+fun literal(literal: String) = object: Parser<Unit>() {
+    override fun apply(context: Context): Result<Unit> {
+        check(context.source is CharSequence) //TODO: Check how to handle better
         if (context.index > context.source.length) return context.error("End of File")
         val subSequence = context.source.subSequence(context.index, minOf(context.source.length, context.index + literal.length))
         val result = subSequence == literal
@@ -23,6 +24,17 @@ fun literal(literal: String) = object: Parser<Char, CharSequence, Unit>() {
                 }
                 else -> context.error("$literal not found")
             }
+        }
+    }
+}
+
+fun literal(literal: Char) = object: Parser<Unit>() {
+    override fun apply(context: Context): Result<Unit> {
+        check(context.source is CharSequence) //TODO: Check how to handle better
+        if (context.index > context.source.length) return context.error("End of File")
+        return when (context.source[context.index] == literal) {
+            true -> context.success(Unit, 1)
+            false -> context.error("$literal not found")
         }
     }
 }

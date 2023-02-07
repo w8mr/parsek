@@ -2,6 +2,8 @@ package nl.w8mr.parsek.example.jafun
 
 import nl.w8mr.parsek.map
 import nl.w8mr.parsek.oneOf
+import nl.w8mr.parsek.oneOrMore
+import nl.w8mr.parsek.text.Parsers.followedBy
 import nl.w8mr.parsek.zeroOrMore
 import nl.w8mr.parsek.text.Parsers.seq
 import nl.w8mr.parsek.text.Parsers.zeroOrMore
@@ -23,6 +25,6 @@ val identifier = seq(oneOf(letter, underscore), zeroOrMore(oneOf(letter, undersc
 
 val dot = char('.').map { Dot }
 val lineStringContent = zeroOrMore(char(" is not valid string Char") { it != '"' && it != '\\'})
-val lineStringLiteral = seq(char('"'), lineStringContent, char('"')).map(::StringLiteral)
+val lineStringLiteral = ('"' followedBy lineStringContent followedBy '"').map(::StringLiteral)
 val ws = char(" is not whitespace") { it == '\u0020' || it == '\u0009' || it == '\u000c' }.map { WS }
 val lexer = zeroOrMore(oneOf(identifier, dot, lineStringLiteral, ws))

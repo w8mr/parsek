@@ -1,21 +1,21 @@
 package nl.w8mr.parsek
 
-operator fun <T, S, R> Parser<T, S, R>.times(times: Int) = repeat(this, times, times)
+operator fun <R> Parser<R>.times(times: Int) = repeat(this, times, times)
 
-operator fun <T, S, R> Int.times(parser: Parser<T, S, R>) = repeat(parser, this, this)
+operator fun <R> Int.times(parser: Parser<R>) = repeat(parser, this, this)
 
-operator fun <T, S, R> IntRange.times(parser: Parser<T, S, R>) = repeat(parser, this.start, this.endInclusive)
+operator fun <R> IntRange.times(parser: Parser<R>) = repeat(parser, this.start, this.endInclusive)
 
-fun <T, S, R> oneOrMore(parser: Parser<T, S, R>): Parser<T, S, List<R>> = repeat(parser, min = 1)
+fun <R> oneOrMore(parser: Parser<R>): Parser<List<R>> = repeat(parser, min = 1)
 
-fun <T, S, R> zeroOrMore(parser: Parser<T, S, R>): Parser<T, S, List<R>> = repeat(parser)
-
-
-infix fun <T, S, R> Parser<T, S, R>.sepBy(separator: Parser<T, S, *>) = zeroOrMore(seq(this, optional(separator)) { result, _ -> result})
+fun <R> zeroOrMore(parser: Parser<R>): Parser<List<R>> = repeat(parser)
 
 
-fun <T, S, R> repeat(parser: Parser<T, S, R>, max: Int = Int.MAX_VALUE, min: Int = 0) = object: Parser<T, S, List<R>>() {
-    override fun apply(context: Context<T, S>): Result<List<R>> {
+infix fun <R> Parser<R>.sepBy(separator: Parser<*>) = zeroOrMore(seq(this, optional(separator)) { result, _ -> result})
+
+
+fun <R> repeat(parser: Parser<R>, max: Int = Int.MAX_VALUE, min: Int = 0) = object: Parser<List<R>>() {
+    override fun apply(context: Context): Result<List<R>> {
         val list = mutableListOf<R>()
         val begin = context.index
         while (context.hasNext()) {

@@ -4,8 +4,9 @@ import nl.w8mr.parsek.Context
 import nl.w8mr.parsek.Parser
 
 
-fun regex(pattern: String) = object :  CharParser<String>() {
-    override fun apply(context: CharContext): Result<String> {
+fun regex(pattern: String) = object :  Parser<String>() {
+    override fun apply(context: Context): Result<String> {
+        check(context.source is CharSequence) //TODO: Check how to handle better
         val regex = "^$pattern".toRegex()
         val input = context.source.subSequence(context.index, context.source.length)
         val result = regex.find(input)
@@ -15,8 +16,8 @@ fun regex(pattern: String) = object :  CharParser<String>() {
                     val cpattern = regex.toPattern()
                     var i = 0
                     while (true) {
-                        val m = cpattern.matcher(input.subSequence(0, i));
-                        m.find();
+                        val m = cpattern.matcher(input.subSequence(0, i))
+                        m.find()
                         if (!m.hitEnd()) break
                         i++
                     }
