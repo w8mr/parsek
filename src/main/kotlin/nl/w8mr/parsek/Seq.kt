@@ -27,3 +27,5 @@ fun <R1, R2, R3, R4, R5, R> seq(p1: Parser<R1>, p2: Parser<R2>, p3: Parser<R3>, 
 fun <R1, R2, R3, R4, R5, R6, R> seq(p1: Parser<R1>, p2: Parser<R2>, p3: Parser<R3>, p4: Parser<R4>, p5: Parser<R5>, p6: Parser<R6>, map: (v1: R1, v2: R2, v3: R3, v4: R4, v5: R5, v6: R6) -> R) =
     seq(seq(p1, p2), seq(p3, p4), seq(p5, p6) { v5, v6 -> Pair(v5, v6) }) { (v1, v2), (v3, v4), (v5, v6) -> map(v1, v2, v3, v4, v5, v6) }
 
+infix fun <R: Any?> Parser<Unit>.prefixLiteral(parser : Parser<R>): Parser<R> = seq(this, parser) { _, r -> r}
+infix fun <R: Any?> Parser<R>.postfixLiteral(parser : Parser<Unit>): Parser<R> = seq(this, parser) { r, _ -> r}

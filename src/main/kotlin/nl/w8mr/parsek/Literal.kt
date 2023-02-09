@@ -12,3 +12,5 @@ fun <R: Any> literal(literal: KClass<R>) = object: Parser<R>() {
         }
     }
 }
+
+fun <R: Any> iLiteral(literal: KClass<R>) = literal(literal).map { }
