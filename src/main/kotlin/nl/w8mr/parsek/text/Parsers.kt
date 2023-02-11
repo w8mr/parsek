@@ -30,8 +30,12 @@ object Parsers {
     fun seq(p1: Parser<String>, p2: Parser<String>) =
         nl.w8mr.parsek.seq(p1, p2) { v1, v2 -> "$v1$v2" }
 
-    @JvmName("seqss")
+    @JvmName("seqcsc")
     fun seq(p1: Parser<Char>, p2: Parser<String>, p3: Parser<Char>) =
+        nl.w8mr.parsek.seq(p1, p2, p3, { v1, v2, v3 -> "$v1$v2$v3" })
+
+    @JvmName("seqcss")
+    fun seq(p1: Parser<Char>, p2: Parser<String>, p3: Parser<String>) =
         nl.w8mr.parsek.seq(p1, p2, p3, { v1, v2, v3 -> "$v1$v2$v3" })
 
     infix fun <R> String.followedBy(parser: Parser<R>): Parser<R> = nl.w8mr.parsek.seq(literal(this), parser) { _, result -> result}
