@@ -18,9 +18,12 @@ infix fun <R> Parser<R>.sepBy(separator: Parser<*>) = object: Parser<List<R>>() 
             val cur = context.index
             when (val result = this@sepBy.apply(context)) {
                 is Success -> list.add(result.value)
-                else -> {
+                is Error -> {
                     context.index = cur
-                    break
+                    when {
+                        list.isEmpty() -> return context.error(result.message, 0, listOf(result))
+                        else -> break
+                    }
                 }
             }
             val cur2 = context.index
