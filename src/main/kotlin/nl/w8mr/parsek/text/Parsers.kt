@@ -9,6 +9,7 @@ object Parsers {
     val number get() = regex("-?\\d+") map { it.toInt() }
 
     fun zeroOrMore(parser: Parser<Char>) = nl.w8mr.parsek.repeat(parser).map { it.joinToString("") }
+    fun oneOrMore(parser: Parser<Char>) = nl.w8mr.parsek.repeat(parser, min = 1).map { it.joinToString("") }
 
     @JvmName("seqcs")
     fun seq(p1: Parser<Char>, p2: Parser<String>) =
