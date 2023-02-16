@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 internal class OperatorTest {
     @Test
     fun array() {
-        open class T()
+        open class T
         data class A(val size: Int, val value: T): T()
         data class N(val name: String): T()
 
