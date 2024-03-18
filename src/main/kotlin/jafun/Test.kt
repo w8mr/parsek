@@ -1,6 +1,6 @@
 package jafun
 
-import com.sun.tools.javac.code.TypeAnnotationPosition.unknown
+import kotlinx.coroutines.delay
 
 data class Employee(val name: String, val age: Int, val salary: Int)
 data class Manager(val name: String, val age: Int, val employees: List<Employee>)
@@ -58,3 +58,10 @@ fun test() {
 
 public fun main(args: Array<String>): Unit {
 test() }
+
+suspend fun sus() {
+    println("test")
+    delay(100L)
+    println("test2")
+
+}

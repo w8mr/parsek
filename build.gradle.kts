@@ -16,6 +16,12 @@ repositories {
 }
 
 dependencies {
+<<<<<<< HEAD
+=======
+    implementation(project(":parsek"))
+    implementation(project(":kasmine"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+>>>>>>> cbfd594 (feat: Added function declaration)
     testImplementation(kotlin("test"))
 }
 
