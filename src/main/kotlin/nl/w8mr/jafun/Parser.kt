@@ -1,8 +1,10 @@
 package nl.w8mr.jafun
 
 import jafun.compiler.Associativity
+import jafun.compiler.*
 import nl.w8mr.jafun.Token.*
 import nl.w8mr.parsek.*
+import nl.w8mr.parsek.failOr
 import nl.w8mr.parsek.Parser
 import java.lang.IllegalArgumentException
 
@@ -77,13 +79,13 @@ object Parser {
     }
 
     private fun newVariable(identifier: Identifier): ASTNode.Variable {
-        val symbol = Symbol(identifier.value, type = Unknown)
+        val symbol = Symbol(identifier.value, type = UnknownType)
         symbolMap.put(identifier.value, symbol)
         return ASTNode.Variable(symbol)
     }
 
     private fun newFunction(identifier: Identifier, block: List<ASTNode.Statement> ): ASTNode.Function {
-        val symbol = Symbol(identifier.value, type = Unknown)
+        val symbol = Symbol(identifier.value, type = UnknownType)
         symbolMap.put(identifier.value, symbol)
         return ASTNode.Function(symbol, block)
     }
@@ -115,6 +117,7 @@ object Parser {
     private val operations = OparatorTable.create(expression) {
         //TODO: add based on methods
 
+        postfix(40, methodIdentifier(Associativity.POSTFIX, 40).unary { ident -> { expr -> invocation(ident, expr) } })
         infixr(40, methodIdentifier(Associativity.INFIXR, 40).binary { ident -> { expr1, expr2 -> invocation(ident, ASTNode.ExpressionList(listOf(expr1, expr2))) } })
         infixl(30, methodIdentifier(Associativity.INFIXL, 30).binary { ident -> { expr1, expr2 -> invocation(ident, ASTNode.ExpressionList(listOf(expr1, expr2))) } })
         infixl(20, methodIdentifier(Associativity.INFIXL, 20).binary { ident -> { expr1, expr2 -> invocation(ident, ASTNode.ExpressionList(listOf(expr1, expr2))) } })

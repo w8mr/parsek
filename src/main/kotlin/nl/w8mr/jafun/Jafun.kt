@@ -3,13 +3,16 @@ package nl.w8mr.jafun
 import nl.w8mr.kasmine.*
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
 import java.io.PrintStream
+import java.util.concurrent.TimeUnit
 import kotlin.Array
 
 fun compile(code: String, className: String = "HelloWorld", methodName: String = "main", methodSig: String = "([Ljava/lang/String;)V"): ByteArray {
     val lexed = lexer.parse(code).filter { it !is Token.WS }
     val parsed = Parser.parse(lexed)
-    println(parsed)
+    println("PARSED: $parsed")
+    println()
     return compile(parsed, className, methodName, methodSig)
 }
 
@@ -27,7 +30,9 @@ fun test(code: String, className: String = "HelloWorld", methodName: String = "m
     runMethod(bytes, className, methodName)
     System.setOut(oldOut)
     val result = String(output.toByteArray())
-    println(result)
+    println("OUTPUT: $result")
+//    print("DISASSEMBLE: ")
+//    println("javap -v HelloWorld.class".runCommand(File("./build/classes/jafun/test")))
     return result
 
 }
@@ -61,5 +66,22 @@ fun compileMethod(classBuilder: ClassBuilder.ClassDSL.DSL, statements: List<ASTN
             statements.forEachIndexed { index, statement -> statement.compile(this, (statements.size - 1) == index) }
             ret()
         }
+    }
+}
+
+fun String.runCommand(workingDir: File): String? {
+    try {
+        val parts = this.split("\\s".toRegex())
+        val proc = ProcessBuilder(*parts.toTypedArray())
+            .directory(workingDir)
+            .redirectOutput(ProcessBuilder.Redirect.PIPE)
+            .redirectError(ProcessBuilder.Redirect.PIPE)
+            .start()
+
+        proc.waitFor(60, TimeUnit.MINUTES)
+        return proc.inputStream.bufferedReader().readText()
+    } catch(e: IOException) {
+        e.printStackTrace()
+        return null
     }
 }

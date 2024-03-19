@@ -1,5 +1,6 @@
 package nl.w8mr.jafun
 
+import jafun.compiler.*
 import nl.w8mr.kasmine.*
 
 sealed interface ASTNode {
@@ -7,9 +8,7 @@ sealed interface ASTNode {
 
     data class Statement(val expression: Expression): ASTNode {
         override fun compile(builder: ClassBuilder.MethodDSL.DSL, isExpression: Boolean) {
-            with(builder) {
-                expression.compile(builder, isExpression)
-            }
+            expression.compile(builder, isExpression)
         }
 
     }
@@ -36,13 +35,13 @@ sealed interface ASTNode {
             }
         }
         override fun type(): TypeSig {
-            return Integer
+            return IntegerType
         }
 
     }
 
     data class ExpressionList(val arguments: List<Expression>) : Expression() {
-        override fun type(): TypeSig = Unknown
+        override fun type(): TypeSig = UnknownType
     }
 
     data class StaticFieldInvocation(val method: JFMethod, val field: JFField, val arguments: List<Expression>) : Expression() {
@@ -87,9 +86,9 @@ sealed interface ASTNode {
             if (argument.type() == parameter) {
                 argument.compile(builder)
             } else {
-                if (((argument.type() is JFClass) || (argument.type() is Clazz))  && ((parameter is JFClass) || (parameter is Clazz))) {
+                if (((argument.type() is JFClass) || (argument.type() is ClassType))  && ((parameter is JFClass) || (parameter is ClassType))) {
                     argument.compile(builder)
-                } else if ((argument.type() == Integer) && ((parameter is JFClass) || (parameter is Clazz))) {
+                } else if ((argument.type() == IntegerType) && ((parameter is JFClass) || (parameter is ClassType))) {
                     argument.compile(builder)
                     invokeStatic("java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;")
                 } else {
@@ -109,8 +108,8 @@ sealed interface ASTNode {
                 if (isExpression) dup()
                 when (symbol.type) {
                     is JFClass -> astore(symbol.name)
-                    is Clazz -> astore(symbol.name)
-                    is Integer -> istore(symbol.name)
+                    is ClassType -> astore(symbol.name)
+                    is IntegerType -> istore(symbol.name)
                     else -> TODO("Need to implement types")
                 }
             }
@@ -123,8 +122,8 @@ sealed interface ASTNode {
             with(builder) {
                 when (symbol.type) {
                     is JFClass -> aload(symbol.name)
-                    is Clazz -> aload(symbol.name)
-                    is Integer -> iload(symbol.name)
+                    is ClassType -> aload(symbol.name)
+                    is IntegerType -> iload(symbol.name)
                     else -> TODO("Need to implement types")
                 }
             }
@@ -137,21 +136,21 @@ sealed interface ASTNode {
 
     data class Function(val symbol: Symbol, val block: List<ASTNode.Statement>): Expression() {
         override fun type(): TypeSig {
-            return Unknown
+            return UnknownType
         }
 
     }
 
     data class Block(val block: List<ASTNode.Statement>): Expression() {
         override fun type(): TypeSig {
-            return Unknown
+            return UnknownType
         }
 
     }
 
 
     data class MethodIdentifier(val method: JFMethod, val field: JFField?) : Expression() {
-        override fun type(): TypeSig = Unknown
+        override fun type(): TypeSig = UnknownType
     }
 
 }

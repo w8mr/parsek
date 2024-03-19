@@ -16,13 +16,11 @@ repositories {
 }
 
 dependencies {
-<<<<<<< HEAD
-=======
     implementation(project(":parsek"))
     implementation(project(":kasmine"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
->>>>>>> cbfd594 (feat: Added function declaration)
+    implementation(kotlin("reflect"))
     testImplementation(kotlin("test"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 tasks.test {
@@ -30,7 +28,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 application {

@@ -164,8 +164,25 @@ class CompilerTest {
     }
 
     @Test
+    fun postfixOperator() {
+        val result = test("""
+            println 5++
+        """)
+        assertEquals("6\n", result)
+    }
+
+    @Test
+    fun postfixFunction() {
+        val result = test("""
+            println 5 euro + 20 cent
+        """)
+        assertEquals("520\n", result)
+    }
+
+    @Test
     fun funDeclaration() {
-        val result = test("""fun test() { fun blah() {} }
+        val result = test("""
+            fun test() { println 2 }
         """)
         assertEquals("", result)
     }
