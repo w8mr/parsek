@@ -1,8 +1,3 @@
 
-rootProject.name = "jafun"
+rootProject.name = "parsek"
 
-
-include(":parsek")
-project(":parsek").projectDir = file("../parsek")
-include(":kasmine")
-project(":kasmine").projectDir = file("../kasmine")

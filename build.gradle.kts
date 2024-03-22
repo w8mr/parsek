@@ -16,8 +16,6 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":parsek"))
-    implementation(project(":kasmine"))
     implementation(kotlin("reflect"))
     testImplementation(kotlin("test"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")

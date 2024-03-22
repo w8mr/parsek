@@ -10,8 +10,10 @@ fun <R> oneOrMore(parser: Parser<R>): Parser<List<R>> = repeat(parser, min = 1)
 
 fun <R> zeroOrMore(parser: Parser<R>): Parser<List<R>> = repeat(parser)
 
+infix fun <R> Parser<R>.sepBy(separator: Parser<*>) = sepBy(separator, false)
+infix fun <R> Parser<R>.sepByAllowEmpty(separator: Parser<*>) = sepBy(separator, true)
 
-infix fun <R> Parser<R>.sepBy(separator: Parser<*>) = object: Parser<List<R>>() {
+fun <R> Parser<R>.sepBy(separator: Parser<*>, allowEmpty: Boolean) = object: Parser<List<R>>() {
     override fun apply(context: Context): Result<List<R>> {
         val list = mutableListOf<R>()
         while (context.hasNext()) {
@@ -21,6 +23,7 @@ infix fun <R> Parser<R>.sepBy(separator: Parser<*>) = object: Parser<List<R>>() 
                 is Error -> {
                     context.index = cur
                     when {
+                        list.isEmpty() && allowEmpty -> return context.success(list, 0)
                         list.isEmpty() -> return context.error(result.message, 0, listOf(result))
                         else -> break
                     }
