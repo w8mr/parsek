@@ -9,8 +9,7 @@ fun regex(pattern: String) = object :  Parser<String>() {
         check(context.source is CharSequence) //TODO: Check how to handle better
         val regex = "^$pattern".toRegex()
         val input = context.source.subSequence(context.index, context.source.length)
-        val result = regex.find(input)
-        return when (result) {
+        return when (val result = regex.find(input)) {
             null -> when (context.errorLevel) {
                 3 -> {
                     val cpattern = regex.toPattern()

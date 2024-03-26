@@ -4,16 +4,20 @@ operator fun <R> Parser<R>.times(times: Int) = repeat(this, times, times)
 
 operator fun <R> Int.times(parser: Parser<R>) = repeat(parser, this, this)
 
-operator fun <R> IntRange.times(parser: Parser<R>) = repeat(parser, this.start, this.endInclusive)
+operator fun <R> IntRange.times(parser: Parser<R>) = repeat(parser, this.first, this.last)
 
 fun <R> oneOrMore(parser: Parser<R>): Parser<List<R>> = repeat(parser, min = 1)
 
 fun <R> zeroOrMore(parser: Parser<R>): Parser<List<R>> = repeat(parser)
 
 infix fun <R> Parser<R>.sepBy(separator: Parser<*>) = sepBy(separator, false)
+
 infix fun <R> Parser<R>.sepByAllowEmpty(separator: Parser<*>) = sepBy(separator, true)
 
-fun <R> Parser<R>.sepBy(separator: Parser<*>, allowEmpty: Boolean) = object: Parser<List<R>>() {
+fun <R> Parser<R>.sepBy(
+    separator: Parser<*>,
+    allowEmpty: Boolean,
+) = object : Parser<List<R>>() {
     override fun apply(context: Context): Result<List<R>> {
         val list = mutableListOf<R>()
         while (context.hasNext()) {
@@ -22,9 +26,9 @@ fun <R> Parser<R>.sepBy(separator: Parser<*>, allowEmpty: Boolean) = object: Par
                 is Success -> list.add(result.value)
                 is Error -> {
                     context.index = cur
-                    when {
-                        list.isEmpty() && allowEmpty -> return context.success(list, 0)
-                        list.isEmpty() -> return context.error(result.message, 0, listOf(result))
+                    return when {
+                        list.isEmpty() && allowEmpty -> context.success(list, 0)
+                        list.isEmpty() -> context.error(result.message, 0, listOf(result))
                         else -> break
                     }
                 }
@@ -42,7 +46,11 @@ fun <R> Parser<R>.sepBy(separator: Parser<*>, allowEmpty: Boolean) = object: Par
     }
 }
 
-fun <R> repeat(parser: Parser<R>, max: Int = Int.MAX_VALUE, min: Int = 0) = object: Parser<List<R>>() {
+fun <R> repeat(
+    parser: Parser<R>,
+    max: Int = Int.MAX_VALUE,
+    min: Int = 0,
+) = object : Parser<List<R>>() {
     override fun apply(context: Context): Result<List<R>> {
         val list = mutableListOf<R>()
         val begin = context.index

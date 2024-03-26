@@ -16,6 +16,14 @@ fun <O, R> Parser<O>.unary(map : (O) -> (R) -> R) = object: Parser<(R) -> R>() {
         }
 }
 
+fun <O, R> Parser<O>.nullary(map : (O) -> () -> R) = object: Parser<() -> R>() {
+    override fun apply(context: Context): Result<() -> R> =
+        when (val o = this@nullary.apply(context)) {
+            is Success -> context.success(map(o.value), 0)
+            is Error -> context.error("operator not found", 0 , subResults = listOf(o))
+        }
+}
+
 fun <R> Parser<out R>.prefix(op: Parser<(R)->R>) = object: Parser<R>() {
     override fun apply(context: Context): Result<R> =
         when (val rs = oneOrMore(op).apply(context)) {
@@ -31,6 +39,11 @@ fun <R> Parser<out R>.prefix(op: Parser<(R)->R>) = object: Parser<R>() {
                 is Error -> context.error(r1.message, 0, listOf(r1))
             }
         }
+}
+
+fun <R> Parser<R>.solo() = object: Parser<R>() {
+    override fun apply(context: Context): Result<R> =
+        this@solo.apply(context)
 }
 
 
@@ -108,13 +121,15 @@ class OparatorTable<R> {
                     Associativity.INFIXR -> operand.infixr(oneOf(*(entry.value.map { it.op as Parser<(R, R) -> R> }).toTypedArray()))
                     Associativity.PREFIX -> operand.prefix(oneOf(*(entry.value.map { it.op as Parser<(R) -> R> }).toTypedArray()))
                     Associativity.POSTFIX -> operand.postfix(oneOf(*(entry.value.map { it.op as Parser<(R) -> R> }).toTypedArray()))
+                    Associativity.SOLO -> operand.solo()
+
                 }
             }
             return operatorExpr
         }
     }
     enum class Associativity{
-        INFIXL, INFIXR, PREFIX, POSTFIX
+        INFIXL, INFIXR, PREFIX, POSTFIX, SOLO
     }
     data class Operator(val op: Parser<*>, val precedence : Int, val associativity: Associativity)
 
@@ -129,6 +144,10 @@ class OparatorTable<R> {
 
         fun prefix(precedence: Int, op: Parser<(R) -> R>) {
             ops.add(Operator(op, precedence, Associativity.PREFIX))
+        }
+
+        fun solo(precedence: Int, op: Parser<() -> R>) {
+            ops.add(Operator(op, precedence, Associativity.SOLO))
         }
 
         fun postfix(precedence: Int, op: Parser<(R) -> R>) {

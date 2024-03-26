@@ -1,17 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.21"
+    kotlin("jvm") version "1.9.22"
     application
     `maven-publish`
-
 }
 
 group = "nl.w8mr"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
@@ -26,7 +24,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "20"
 }
 
 application {

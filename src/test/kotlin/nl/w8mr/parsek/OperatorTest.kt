@@ -1,9 +1,9 @@
 package nl.w8mr.parsek
 
 import nl.w8mr.parsek.text.Parsers.followedBy
+import nl.w8mr.parsek.text.Parsers.number
 import nl.w8mr.parsek.text.char
 import nl.w8mr.parsek.text.regex
-import nl.w8mr.parsek.text.Parsers.number
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -11,8 +11,10 @@ internal class OperatorTest {
     @Test
     fun array() {
         open class T
-        data class A(val size: Int, val value: T): T()
-        data class N(val name: String): T()
+
+        data class A(val size: Int, val value: T) : T()
+
+        data class N(val name: String) : T()
 
         val name: Parser<T> = regex("[a-z]*").map(::N)
         val arraySubscript = ('[' followedBy number followedBy ']').unary<Int, T> { s -> { acc -> A(s, acc) } }
@@ -32,16 +34,20 @@ internal class OperatorTest {
     @Test
     fun numberPostfix() {
         val digit = char { it in '0'..'9' }.map { it - '0' }
-        val nmbr = digit.postfix(digit.unary { r -> { acc -> acc * 10 + r }})
+        val nmbr = digit.postfix(digit.unary { r -> { acc -> acc * 10 + r } })
         val test = nmbr.parse("512")
 
         assertEquals(512, test)
     }
 
-    fun pow(b: Int, p: Int): Int = when {
-        p == 0 -> 1
-        else -> b * pow(b,p-1)
-    }
+    private fun pow(
+        b: Int,
+        p: Int,
+    ): Int =
+        when {
+            p == 0 -> 1
+            else -> b * pow(b, p - 1)
+        }
 
     @Test
     fun power() {
@@ -79,7 +85,7 @@ internal class OperatorTest {
     @Test
     fun numberEmptyOperator() {
         val digit = char { it in '0'..'9' }.map { it - '0' }
-        val nmbr = digit.infixl(empty().binary { _ -> { acc, r -> acc * 10 + r }})
+        val nmbr = digit.infixl(empty().binary { _ -> { acc, r -> acc * 10 + r } })
         val test = nmbr.parse("512")
 
         assertEquals(512, test)
@@ -90,26 +96,22 @@ internal class OperatorTest {
         val expr = number.prefix(char('-').unary { _ -> { n -> -n } })
         val test = expr.parse("-------42")
         assertEquals(-42, test)
-
     }
-
 
     @Test
     fun calcWithTable() {
-
         val positveNumber = regex("?\\d+") map { it.toInt() }
-        val table = OparatorTable.create(positveNumber) {
-            prefix(40, char('-').unary { { n -> -n } })
-            infixr(30, char('^').binary { ::pow })
-            infixl(20, char('*').binary { Int::times })
-            infixl(20, char('/').binary { Int::div })
-            infixl(10, char('+').binary { Int::plus })
-            infixl(10, char('-').binary { Int::minus })
-        }
+        val table =
+            OparatorTable.create(positveNumber) {
+                prefix(40, char('-').unary { { n -> -n } })
+                infixr(30, char('^').binary { ::pow })
+                infixl(20, char('*').binary { Int::times })
+                infixl(20, char('/').binary { Int::div })
+                infixl(10, char('+').binary { Int::plus })
+                infixl(10, char('-').binary { Int::minus })
+            }
 
         val test = table.parse("-1+2*3^2+-4")
         assertEquals(13, test)
     }
-
 }
-
