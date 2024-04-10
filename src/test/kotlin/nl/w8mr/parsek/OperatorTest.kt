@@ -113,5 +113,7 @@ internal class OperatorTest {
 
         val test = table.parse("-1+2*3^2+-4")
         assertEquals(13, test)
+
+        assertEquals(16, table.parse("4+3*5-6/2"))
     }
 }
