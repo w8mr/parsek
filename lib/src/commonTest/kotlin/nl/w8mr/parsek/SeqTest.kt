@@ -69,4 +69,16 @@ class SeqTest {
         )
     }
 
+    @Test
+    fun `varargs short sequence`() {
+        val parser = seq(char, digit, char)
+        parser.parse("a1b2c3d4") shouldBe listOf('a', '1', 'b')
+    }
+
+    @Test
+    fun `varargs long sequence`() {
+        val parser = seq(char, digit, char, digit, char, digit, char, digit)
+        parser.parse("a1b2c3d4") shouldBe listOf('a', '1', 'b', '2', 'c', '3', 'd', '4')
+    }
+
 }
