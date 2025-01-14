@@ -3,8 +3,8 @@ package nl.w8mr.parsek
 import nl.w8mr.parsek.Parser
 import nl.w8mr.parsek.combi
 
-fun <R, Token> repeat(
-    parser: Parser<R, Token>,
+fun <Token, R> repeat(
+    parser: Parser<Token, R>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
 ) = combi("{error}") {
@@ -23,11 +23,11 @@ fun <R, Token> repeat(
         }.bind()
     }
 
-operator fun <R, Token> Parser<R, Token>.times(times: Int) = repeat(this, times, times)
-operator fun <R, Token> Int.times(parser: Parser<R, Token>) = repeat(parser, this, this)
-operator fun <R, Token> IntRange.times(parser: Parser<R, Token>) = repeat(parser, this.last, this.first)
+operator fun <Token, R> Parser<Token, R>.times(times: Int) = repeat(this, times, times)
+operator fun <Token, R> Int.times(parser: Parser<Token, R>) = repeat(parser, this, this)
+operator fun <Token, R> IntRange.times(parser: Parser<Token, R>) = repeat(parser, this.last, this.first)
 
-fun <R, Token> oneOrMore(parser: Parser<R, Token>): Parser<List<R>, Token> = repeat(parser, min = 1)
-fun <R, Token> some(parser: Parser<R, Token>): Parser<List<R>, Token> = repeat(parser, min = 1)
+fun <Token, R> oneOrMore(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(parser, min = 1)
+fun <Token, R> some(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(parser, min = 1)
 
-fun <R, Token> zeroOrMore(parser: Parser<R, Token>): Parser<List<R>, Token> = repeat(parser)
+fun <Token, R> zeroOrMore(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(parser)

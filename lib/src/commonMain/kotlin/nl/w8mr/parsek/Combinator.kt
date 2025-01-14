@@ -6,8 +6,8 @@ class ParseInteruptedException(override val message: String):
     CancellationException("kotlin.coroutines.cancellation.CancellationException should never get swallowed. Always re-throw it if captured.") {
 }
 
-fun <R, Token> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token>.() -> R): Parser<R, Token> {
-    return object : Parser<R, Token> {
+fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token>.() -> R): Parser<Token, R> {
+    return object : Parser<Token, R> {
         override fun apply(source: ParserSource<Token>): Parser.Result<R> {
             val subResults = mutableListOf<Parser.Result<*>>()
             return try {
@@ -23,22 +23,22 @@ fun <R, Token> combi(message: String = "Combinator failed, parser number {index}
 
 
 sealed interface CombinatorDSL<Token> {
-    operator fun <S> Parser<S, Token>.unaryMinus(): S
-    fun <S> Parser<S, Token>.bind(): S
-    fun <S> Parser<S, Token>.bindResult(): Parser.Result<S>
+    operator fun <S> Parser<Token, S>.unaryMinus(): S
+    fun <S> Parser<Token, S>.bind(): S
+    fun <S> Parser<Token, S>.bindResult(): Parser.Result<S>
 
     fun <S> Parser.Result<S>.bind(): S
 
     fun <R> tryParser(block: ParserSource.TryDSLInterface.() -> Parser.Result<R>): Parser.Result<R>
-    fun <R> tryParser(parser: Parser<R, Token>) = tryParser { parser.bindResult() }
+    fun <R> tryParser(parser: Parser<Token, R>) = tryParser { parser.bindResult() }
 
     fun fail(error: String): Nothing
 }
 
 class ParserCombinatorDSL<Token>(private val source: ParserSource<Token>, val subResults: MutableList<Parser.Result<*>>) : CombinatorDSL<Token> {
-    override inline fun <S> Parser<S, Token>.unaryMinus(): S = bind()
+    override inline fun <S> Parser<Token, S>.unaryMinus(): S = bind()
 
-    override fun <S> Parser<S, Token>.bind(): S =
+    override fun <S> Parser<Token, S>.bind(): S =
        this.apply(source).also(subResults::add).bind()
 
     override fun <S> Parser.Result<S>.bind() : S {
@@ -49,7 +49,7 @@ class ParserCombinatorDSL<Token>(private val source: ParserSource<Token>, val su
     }
 
     override fun <R> tryParser(block: ParserSource.TryDSLInterface.() -> Parser.Result<R>) = source.tryParser(block)
-    override fun <S> Parser<S, Token>.bindResult(): Parser.Result<S> =
+    override fun <S> Parser<Token, S>.bindResult(): Parser.Result<S> =
         this.apply(source).also(subResults::add)
 
     override inline fun fail(error: String) = throw ParseInteruptedException(error)
