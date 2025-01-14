@@ -1,7 +1,7 @@
 package nl.w8mr.parsek
 
 
-interface Parser<R, Token> {
+interface Parser<Token, R> {
     sealed class Result<R>(open val subResults: List<Result<*>> = emptyList())
 
     data class Success<R>(val value: R, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
@@ -30,7 +30,7 @@ interface Parser<R, Token> {
 
 }
 
-fun <R, Token> Parser<R, Token>.fold(
+fun <Token, R> Parser<Token, R>.fold(
     iterator: ParserSource<Token>,
     success: ((R, List<Parser.Result<*>>) -> Parser.Result<R>)? = null,
     failed: ((String, List<Parser.Result<*>>)-> Parser.Result<R>)? = null

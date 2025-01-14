@@ -44,7 +44,7 @@ val letter get() = char("Character {actual} is not a letter", Char::isLetter)
 val char get() = char()
 val number get() = some(digit).map { it.joinToString("").toInt() }
 
-val Parser<List<Char>, Char>.asString get(): Parser<String, Char> = this.map {
+val Parser<Char, List<Char>, >.asString get(): Parser<Char, String> = this.map {
     it.joinToString("")
 }
 
