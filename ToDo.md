@@ -57,14 +57,6 @@ combi returning ParserChar/ParserString/ParserUnit
 fun literal(literal: String) = object: Parser<Unit>() {
 fun literal(literal: Char) = object: Parser<Unit>() {
 
-fun seq(p1: Parser<Char>,p2: Parser<String>,
-fun seq(p1: Parser<Char>) = p1.map { v1 -> "$v1" }
-fun seq(p1: Parser<Char>, p2: Parser<Char>,
-fun seq(p1: Parser<String>,p2: Parser<Char>,
-fun seq(p1: Parser<String>,p2: Parser<String>,
-fun seq(p1: Parser<Char>,p2: Parser<String>,p3: Parser<Char>,
-fun seq(p1: Parser<Char>,p2: Parser<String>,p3: Parser<String>,
-
 infix fun <R> String.followedBy(parser: Parser<R>): Parser<R> = nl.w8mr.parsek.seq(literal(this), parser) { _, result -> result }
 infix fun <R> Parser<R>.followedBy(literal: String): Parser<R> = nl.w8mr.parsek.seq(this, literal(literal)) { result, _ -> result }
 infix fun <R> Char.followedBy(parser: Parser<R>): Parser<R> = nl.w8mr.parsek.seq(literal(this), parser) { _, result -> result }
