@@ -47,7 +47,7 @@ class RepetitionTest {
         full.second.subResults[0] shouldBe Parser.Success('a')
         full.second.subResults[1] shouldBe Parser.Success('b')
         full.second.subResults[2] shouldBe Parser.Success('c')
-        full.second.subResults[3] shouldBe Parser.Error<Char>("Character 1 is not a letter", emptyList())
+        full.second.subResults[3] shouldBe Parser.Failure<Char>("Character 1 is not a letter", emptyList())
     }
 
     @Test
@@ -59,7 +59,7 @@ class RepetitionTest {
             Parser.Success('a'),
             Parser.Success('b'),
             Parser.Success('c'),
-            Parser.Error<Char>("Character 1 is not a letter"),
+            Parser.Failure<Char>("Character 1 is not a letter"),
         ))
     }
 

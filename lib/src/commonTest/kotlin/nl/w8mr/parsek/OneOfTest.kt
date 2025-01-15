@@ -31,12 +31,12 @@ class OneOfTest {
         val parser = oneOf(some(digit), some(letter))
         val full = parser.parseTree("★☆abc123")
         full.first shouldBe null
-        full.second shouldBe Parser.Error("None of the parsers matches",
+        full.second shouldBe Parser.Failure("None of the parsers matches",
             listOf(
-                Parser.Error<List<Char>>("Repeat only 0 elements found, needed at least 1",
-                    listOf(Parser.Error<Char>("Character ★ is not a digit"))),
-                Parser.Error<List<Char>>("Repeat only 0 elements found, needed at least 1",
-                    listOf(Parser.Error<Char>("Character ★ is not a letter"))),
+                Parser.Failure<List<Char>>("Repeat only 0 elements found, needed at least 1",
+                    listOf(Parser.Failure<Char>("Character ★ is not a digit"))),
+                Parser.Failure<List<Char>>("Repeat only 0 elements found, needed at least 1",
+                    listOf(Parser.Failure<Char>("Character ★ is not a letter"))),
             )
         )
     }
@@ -47,14 +47,14 @@ class OneOfTest {
         val full = parser.parseTree("abc123")
         full.first shouldBe listOf('a', 'b', 'c')
         full.second.subResults.size shouldBe 2
-        full.second.subResults[0] shouldBe Parser.Error<Char>("Repeat only 0 elements found, needed at least 1", listOf(
-            Parser.Error<Char>("Character a is not a digit")))
+        full.second.subResults[0] shouldBe Parser.Failure<Char>("Repeat only 0 elements found, needed at least 1", listOf(
+            Parser.Failure<Char>("Character a is not a digit")))
         full.second.subResults[1] shouldBe Parser.Success<List<Char>>(
             listOf('a', 'b', 'c'), listOf(
                 Parser.Success('a'),
                 Parser.Success('b'),
                 Parser.Success('c'),
-                Parser.Error("Character 1 is not a letter")))
+                Parser.Failure("Character 1 is not a letter")))
     }
 
 }

@@ -13,7 +13,7 @@ infix fun <Token, R> Parser<Token, R>.filter(predicate: (value: R) -> Boolean): 
 fun <Token, R> Parser<Token, R>.filter(message: String, predicate: (value: R) -> Boolean) =
     mapResult {
         if ((it is Parser.Success) && (!predicate(it.value)))
-            Parser.Error(message)
+            failure(message)
         else
             it
     }

@@ -6,13 +6,13 @@ interface Parser<Token, R> {
 
     data class Success<R>(val value: R, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
 
-    data class Error<R>(val message: String, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
+    data class Failure<R>(val message: String, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
 
     fun apply(iterator: ParserSource<Token>): Result<R> {
         val mark = iterator.index
         return when (val result = applyImpl(iterator)) {
             is Success -> result
-            is Error -> {
+            is Failure -> {
                 iterator.index = mark
                 result
             }
@@ -21,11 +21,14 @@ interface Parser<Token, R> {
 
     fun applyImpl(iterator: ParserSource<Token>): Result<R>
 
+    fun success(value: R, subResults: List<Result<*>> = emptyList()) = Success(value, subResults)
+    fun failure(message: String, subResults: List<Result<*>> = emptyList()) = Failure<R>(message, subResults)
+
     fun parse(source: ParserSource<Token>): R {
         return apply(source).let { result ->
             when (result) {
                 is Success -> result.value
-                is Error -> throw ParseException(result.message, result)
+                is Failure -> throw ParseException(result.message, result)
             }
         }
     }
@@ -34,7 +37,7 @@ interface Parser<Token, R> {
         return apply(source).let { result ->
             when (result) {
                 is Success -> result.value to result
-                is Error -> null to result
+                is Failure -> null to result
             }
         }
     }
@@ -47,7 +50,7 @@ fun <Token, R> Parser<Token, R>.fold(
     failed: ((String, List<Parser.Result<*>>)-> Parser.Result<R>)? = null
 ) = when(val result = apply(iterator)) {
     is Parser.Success -> if (success==null) result else success(result.value, result.subResults)
-    is Parser.Error -> if (failed==null) result else failed(result.message, result.subResults)
+    is Parser.Failure -> if (failed==null) result else failed(result.message, result.subResults)
 }
 
 interface ParserSource<Token> {
