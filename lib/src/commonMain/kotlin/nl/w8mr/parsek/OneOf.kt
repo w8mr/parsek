@@ -2,7 +2,7 @@ package nl.w8mr.parsek
 
 fun <Token, R> oneOf(vararg parsers: Parser<Token, out R>) = combi("{error}") {
     for (parser in parsers) {
-        val result = parser.bindResult()
+        val result = parser.bindAsResult()
         if (result is Parser.Success) {
             return@combi result.value
         }

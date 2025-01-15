@@ -17,19 +17,19 @@ import nl.w8mr.parsek.some
  * <!--- ZIPDOK end -->
  */
 fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object : TextParser<Char> {
-    override fun apply(source: ParserSource<Char>): Parser.Result<Char> = when (val char = source.next()) {
+    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> = when (val char = source.next()) {
         expected -> Parser.Success(expected)
         else -> Parser.Error(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString()))
     }
 }
 
 fun char(message: String = "{actual} found, not a regular character") = object : TextParser<Char> {
-    override fun apply(source: ParserSource<Char>): Parser.Result<Char> =
+    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> =
         source.next()?.let { Parser.Success(it) } ?: Parser.Error<Char>(message.replace("{actual}", "{EoF}"))
 }
 
 fun char(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = object : TextParser<Char> {
-    override fun apply(source: ParserSource<Char>): Parser.Result<Char> =
+    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> =
         source.next()?.let { char ->
             if (predicate(char)) Parser.Success(char)
             else Parser.Error(message.replace("{actual}", char.toString()))

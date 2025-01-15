@@ -8,7 +8,18 @@ interface Parser<Token, R> {
 
     data class Error<R>(val message: String, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
 
-    fun apply(iterator: ParserSource<Token>): Result<R>
+    fun apply(iterator: ParserSource<Token>): Result<R> {
+        val mark = iterator.index
+        return when (val result = applyImpl(iterator)) {
+            is Success -> result
+            is Error -> {
+                iterator.index = mark
+                result
+            }
+        }
+    }
+
+    fun applyImpl(iterator: ParserSource<Token>): Result<R>
 
     fun parse(source: ParserSource<Token>): R {
         return apply(source).let { result ->
@@ -40,26 +51,9 @@ fun <Token, R> Parser<Token, R>.fold(
 }
 
 interface ParserSource<Token> {
-//    fun peek(): Token?
     fun next(): Token?
     fun hasNext(): Boolean
     var index: Int
 
-    fun <R> tryParser(block: TryDSLInterface.() -> Parser.Result<R>): Parser.Result<R> {
-        val mark = index
-        return when (val result = block.invoke(TryDSL(this, index))) {
-            is Parser.Error -> {
-                index = mark
-                result
-            }
-            else -> result
-        }
-    }
-
-    interface TryDSLInterface {
-    }
-
-    class TryDSL<Token>(val source: ParserSource<Token>, val mark: Int) : TryDSLInterface {
-    }
 }
 
