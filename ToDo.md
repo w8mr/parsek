@@ -1,26 +1,18 @@
 # Todo
-- Lazy parser
+- Char/String/Unit Parser (special handling and/seq/combi)
+- Lazy parser // until parser?
+- Lazy subresults
 - Better documentation
 - Long / BigInteger number parsers
-- Success, Error/Failure handling
-- Lazy subresults
 - Error path vs Parse tree
 - Parse tree without errors
-- Char/String/Unit Parser (special handling and/seq/combi)
 - 
 
 
 Parsers:
 ```
-fun <R1, R2, R> seq(p1: Parser<R1>, p2: Parser<R2>, map: (v1: R1, v2: R2) -> R) = object: Parser<R>() {
-...
-fun <R1, R2, R3, R4, R5, R6, R> seq(p1: Parser<R1>, p2: Parser<R2>, p3: Parser<R3>, p4: Parser<R4>, p5: Parser<R5>, p6: Parser<R6>, map: (v1: R1, v2: R2, v3: R3, v4: R4, v5: R5, v6: R6) -> R) =
-
-fun <R1, R2> seq(p1: Parser<R1>, p2: Parser<R2>) =
-
 infix fun <R: Any?> Parser<Unit>.prefixLiteral(parser : Parser<R>): Parser<R> = seq(this, parser) { _, r -> r}
 infix fun <R: Any?> Parser<R>.postfixLiteral(parser : Parser<Unit>): Parser<R> = seq(this, parser) { r, _ -> r}
-
 
 
 fun <R> Parser<R>.sepBy(
@@ -55,6 +47,14 @@ combi returning ParserChar/ParserString/ParserUnit
 
 fun literal(literal: String) = object: Parser<Unit>() {
 fun literal(literal: Char) = object: Parser<Unit>() {
+
+fun seq(p1: Parser<Char>,p2: Parser<String>,
+fun seq(p1: Parser<Char>) = p1.map { v1 -> "$v1" }
+fun seq(p1: Parser<Char>, p2: Parser<Char>,
+fun seq(p1: Parser<String>,p2: Parser<Char>,
+fun seq(p1: Parser<String>,p2: Parser<String>,
+fun seq(p1: Parser<Char>,p2: Parser<String>,p3: Parser<Char>,
+fun seq(p1: Parser<Char>,p2: Parser<String>,p3: Parser<String>,
 
 infix fun <R> String.followedBy(parser: Parser<R>): Parser<R> = nl.w8mr.parsek.seq(literal(this), parser) { _, result -> result }
 infix fun <R> Parser<R>.followedBy(literal: String): Parser<R> = nl.w8mr.parsek.seq(this, literal(literal)) { result, _ -> result }

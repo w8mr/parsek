@@ -13,3 +13,8 @@ class CharSequenceSource(val input: CharSequence): ParserSource<Char> {
     override fun hasNext(): Boolean = index < input.length
 }
 
+fun <R> Parser<Char, R>.parse(input: CharSequence) =
+    this.parse(CharSequenceSource(input))
+
+fun <R> Parser<Char, R>.parseTree(input: CharSequence) =
+    this.parseTree(CharSequenceSource(input))

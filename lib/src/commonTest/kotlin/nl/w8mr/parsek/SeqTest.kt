@@ -1,7 +1,6 @@
 package nl.w8mr.parsek
 
 
-import nl.w8mr.parsek.*
 import nl.w8mr.parsek.text.*
 
 import io.kotest.matchers.shouldBe
@@ -59,12 +58,12 @@ class SeqTest {
         val parser = seq(char, digit, char, digit, char, digit) { a, b, c, d, e, f -> listOf(a, b, c, d, e, f) }
         val full = parser.parseTree("a1bc3d4")
         full.first shouldBe null
-        full.second shouldBe Parser.Error("Combinator failed, parser number 4 with error: Character c is not a digit",
+        full.second shouldBe Parser.Failure("Combinator failed, parser number 4 with error: Character c is not a digit",
             listOf(
                 Parser.Success('a'),
                 Parser.Success('1'),
                 Parser.Success('b'),
-                Parser.Error("Character c is not a digit"),
+                Parser.Failure("Character c is not a digit"),
             )
         )
     }

@@ -16,24 +16,24 @@ import nl.w8mr.parsek.some
  * ```
  * <!--- ZIPDOK end -->
  */
-fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object : TextParser<Char> {
+fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object : Parser<Char, Char> {
     override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> = when (val char = source.next()) {
-        expected -> Parser.Success(expected)
-        else -> Parser.Error(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString()))
+        expected -> success(expected)
+        else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString()))
     }
 }
 
-fun char(message: String = "{actual} found, not a regular character") = object : TextParser<Char> {
+fun char(message: String = "{actual} found, not a regular character") = object : Parser<Char, Char> {
     override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> =
-        source.next()?.let { Parser.Success(it) } ?: Parser.Error<Char>(message.replace("{actual}", "{EoF}"))
+        source.next()?.let { success(it) } ?: failure(message.replace("{actual}", "{EoF}"))
 }
 
-fun char(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = object : TextParser<Char> {
+fun char(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = object : Parser<Char, Char> {
     override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> =
         source.next()?.let { char ->
-            if (predicate(char)) Parser.Success(char)
-            else Parser.Error(message.replace("{actual}", char.toString()))
-        } ?: Parser.Error<Char>(message.replace("{actual}", "{EoF}"))
+            if (predicate(char)) success(char)
+            else failure(message.replace("{actual}", char.toString()))
+        } ?: failure(message.replace("{actual}", "{EoF}"))
 
 }
 

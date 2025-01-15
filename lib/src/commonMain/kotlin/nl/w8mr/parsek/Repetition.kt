@@ -4,17 +4,17 @@ fun <Token, R> repeat(
     parser: Parser<Token, R>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = combi("{error}") {
+): Parser<Token, List<R>> = combi("{error}") {
         val list = mutableListOf<Parser.Success<R>>()
         while (list.size < max) {
             when (val result = parser.bindAsResult()) {
                 is Parser.Success -> list.add(result)
-                is Parser.Error -> break
+                is Parser.Failure -> break
             }
         }
         when {
-            list.size < min -> Parser.Error("Repeat only ${list.size} elements found, needed at least $min")
-            else -> Parser.Success(list.map { it.value })
+            list.size < min -> failure("Repeat only ${list.size} elements found, needed at least $min")
+            else -> success(list.map { it.value })
         }.bind()
     }
 

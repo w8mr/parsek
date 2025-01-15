@@ -6,23 +6,23 @@ class ParseInteruptedException(override val message: String):
     CancellationException("kotlin.coroutines.cancellation.CancellationException should never get swallowed. Always re-throw it if captured.") {
 }
 
-fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token>.() -> R): Parser<Token, R> {
+fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, R>.() -> R): Parser<Token, R> {
     return object : Parser<Token, R> {
         override fun applyImpl(source: ParserSource<Token>): Parser.Result<R> {
             val subResults = mutableListOf<Parser.Result<*>>()
             return try {
-                val dsl = ParserCombinatorDSL(source, subResults)
+                val dsl = ParserCombinatorDSL(this, source, subResults)
                 val result = block.invoke(dsl)
-                Parser.Success(result, subResults)
+                success(result, subResults)
             } catch (ex: ParseInteruptedException) {
-                Parser.Error(message.replace("{index}", subResults.size.toString()).replace("{error}", ex.message), subResults)
+                failure(message.replace("{index}", subResults.size.toString()).replace("{error}", ex.message), subResults)
             }
         }
     }
 }
 
 
-sealed interface CombinatorDSL<Token> {
+sealed interface CombinatorDSL<Token, R> {
     operator fun <S> Parser<Token, S>.unaryMinus(): S
     fun <S> Parser<Token, S>.bind(): S
     fun <S> Parser<Token, S>.bindAsResult(): Parser.Result<S>
@@ -30,10 +30,12 @@ sealed interface CombinatorDSL<Token> {
     fun <S> Parser.Result<S>.bind(): S
 
     fun fail(error: String): Nothing
+    fun success(value: R, subResults: List<Parser.Result<*>> = emptyList()): Parser.Success<R>
+    fun failure(message: String, subResults: List<Parser.Result<*>> = emptyList()): Parser.Failure<R>
 }
 
-class ParserCombinatorDSL<Token>(private val source: ParserSource<Token>, val subResults: MutableList<Parser.Result<*>>) : CombinatorDSL<Token> {
-    override inline fun <S> Parser<Token, S>.unaryMinus(): S = bind()
+class ParserCombinatorDSL<Token, R>(private val parser: Parser<Token, R>, private val source: ParserSource<Token>, val subResults: MutableList<Parser.Result<*>>) : CombinatorDSL<Token, R> {
+    override fun <S> Parser<Token, S>.unaryMinus(): S = bind()
 
     override fun <S> Parser<Token, S>.bind(): S =
        this.apply(source).also(subResults::add).bind()
@@ -41,7 +43,7 @@ class ParserCombinatorDSL<Token>(private val source: ParserSource<Token>, val su
     override fun <S> Parser.Result<S>.bind() : S {
         return when (val result = this@bind) {
             is Parser.Success -> result.value
-            is Parser.Error -> fail(result.message)
+            is Parser.Failure -> fail(result.message)
         }
     }
 
@@ -50,5 +52,7 @@ class ParserCombinatorDSL<Token>(private val source: ParserSource<Token>, val su
 
     override inline fun fail(error: String) = throw ParseInteruptedException(error)
 
+    override fun success(value: R, subResults: List<Parser.Result<*>>): Parser.Success<R> = parser.success(value, subResults)
+    override fun failure(message: String, subResults: List<Parser.Result<*>>): Parser.Failure<R> = parser.failure(message, subResults)
 }
 
