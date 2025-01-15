@@ -1,25 +1,20 @@
 package nl.w8mr.parsek
 
-import nl.w8mr.parsek.Parser
-import nl.w8mr.parsek.combi
-
 fun <Token, R> repeat(
     parser: Parser<Token, R>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
 ) = combi("{error}") {
-        tryParser {
-            val list = mutableListOf<Parser.Success<R>>()
-            while (list.size < max) {
-                when (val result = tryParser(parser)) {
-                    is Parser.Success -> list.add(result)
-                    is Parser.Error -> break
-                }
+        val list = mutableListOf<Parser.Success<R>>()
+        while (list.size < max) {
+            when (val result = parser.bindAsResult()) {
+                is Parser.Success -> list.add(result)
+                is Parser.Error -> break
             }
-            when {
-                list.size < min -> Parser.Error("Repeat only ${list.size} elements found, needed at least $min")
-                else -> Parser.Success(list.map { it.value })
-            }
+        }
+        when {
+            list.size < min -> Parser.Error("Repeat only ${list.size} elements found, needed at least $min")
+            else -> Parser.Success(list.map { it.value })
         }.bind()
     }
 

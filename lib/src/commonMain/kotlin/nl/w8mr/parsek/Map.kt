@@ -6,7 +6,7 @@ fun <R, S, Token> Parser<Token, R>.map(message: String = "{error}", func: (R) ->
 }
 
 fun <R, S, Token> Parser<Token, R>.mapResult(message: String = "{error}", func: (Parser.Result<R>) -> (Parser.Result<S>)) = combi(message) {
-    func(this@mapResult.bindResult()).bind()
+    func(this@mapResult.bindAsResult()).bind()
 }
 infix fun <Token, R> Parser<Token, R>.filter(predicate: (value: R) -> Boolean): Parser<Token, R> = filter("Predicate not met", predicate)
 

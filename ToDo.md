@@ -1,7 +1,6 @@
 # Todo
+- Lazy parser
 - Better documentation
-- Better imports
-- Better separation of text parsers
 - Long / BigInteger number parsers
 - Success, Error/Failure handling
 - Lazy subresults
