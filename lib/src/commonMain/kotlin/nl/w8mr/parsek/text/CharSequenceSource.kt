@@ -5,6 +5,10 @@ import nl.w8mr.parsek.Parser
 
 class CharSequenceSource(val input: CharSequence): ParserSource<Char> {
     override var index = 0
+    override fun mark(): Int = index
+    override fun reset(mark: Int) { index = mark }
+    override fun release(mark: Int) = Unit
+    override val state: MutableMap<String, Any> get() = mutableMapOf()
 
 //    override fun peek(): kotlin.Char? = if (hasNext()) input[index] else null
 

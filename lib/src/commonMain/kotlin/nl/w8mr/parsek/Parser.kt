@@ -9,11 +9,14 @@ interface Parser<Token, R> {
     data class Failure<R>(val message: String, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
 
     fun apply(source: ParserSource<Token>): Result<R> {
-        val mark = source.index
+        val mark = source.mark()
         return when (val result = applyImpl(source)) {
-            is Success -> result
+            is Success -> {
+                source.release(mark)
+                result
+            }
             is Failure -> {
-                source.index = mark
+                source.reset(mark)
                 result
             }
         }
@@ -57,6 +60,13 @@ interface ParserSource<Token> {
     fun next(): Token?
     fun hasNext(): Boolean
     var index: Int
+
+    fun mark() : Int
+    fun reset(mark: Int)
+    fun release(mark: Int)
+
+    val state: MutableMap<String, Any>
+
 
 }
 

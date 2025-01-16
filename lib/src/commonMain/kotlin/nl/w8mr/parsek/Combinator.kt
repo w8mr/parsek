@@ -42,6 +42,11 @@ sealed interface CombinatorDSL<Token, R> {
     fun fail(error: String): Nothing
     fun success(value: R, subResults: List<Parser.Result<*>> = emptyList()): Parser.Success<R>
     fun failure(message: String, subResults: List<Parser.Result<*>> = emptyList()): Parser.Failure<R>
+
+    fun mark() : Int
+    fun reset(mark: Int)
+    fun release(mark: Int)
+    val state : MutableMap<String, Any>
 }
 
 class ParserCombinatorDSL<Token, R>(private val parser: Parser<Token, R>, private val source: ParserSource<Token>, val subResults: MutableList<Parser.Result<*>>) : CombinatorDSL<Token, R> {
@@ -64,5 +69,12 @@ class ParserCombinatorDSL<Token, R>(private val parser: Parser<Token, R>, privat
 
     override fun success(value: R, subResults: List<Parser.Result<*>>): Parser.Success<R> = parser.success(value, subResults)
     override fun failure(message: String, subResults: List<Parser.Result<*>>): Parser.Failure<R> = parser.failure(message, subResults)
+
+    override fun mark() = source.mark()
+    override fun reset(mark: Int) = source.reset(mark)
+    override fun release(mark: Int) = source.release(mark)
+
+    override val state: MutableMap<String, Any> by source::state
+
 }
 
