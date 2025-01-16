@@ -8,18 +8,18 @@ interface Parser<Token, R> {
 
     data class Failure<R>(val message: String, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
 
-    fun apply(iterator: ParserSource<Token>): Result<R> {
-        val mark = iterator.index
-        return when (val result = applyImpl(iterator)) {
+    fun apply(source: ParserSource<Token>): Result<R> {
+        val mark = source.index
+        return when (val result = applyImpl(source)) {
             is Success -> result
             is Failure -> {
-                iterator.index = mark
+                source.index = mark
                 result
             }
         }
     }
 
-    fun applyImpl(iterator: ParserSource<Token>): Result<R>
+    fun applyImpl(source: ParserSource<Token>): Result<R>
 
     fun success(value: R, subResults: List<Result<*>> = emptyList()) = Success(value, subResults)
     fun failure(message: String, subResults: List<Result<*>> = emptyList()) = Failure<R>(message, subResults)
@@ -33,7 +33,7 @@ interface Parser<Token, R> {
         }
     }
 
-    fun parseTree(source: ParserSource<Token>): Pair<R?, Parser.Result<R>> {
+    fun parseTree(source: ParserSource<Token>): Pair<R?, Result<R>> {
         return apply(source).let { result ->
             when (result) {
                 is Success -> result.value to result
