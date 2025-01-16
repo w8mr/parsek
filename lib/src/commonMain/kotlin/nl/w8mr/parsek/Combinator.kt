@@ -3,8 +3,7 @@ package nl.w8mr.parsek
 import kotlin.coroutines.cancellation.CancellationException
 
 class ParseInteruptedException(override val message: String):
-    CancellationException("kotlin.coroutines.cancellation.CancellationException should never get swallowed. Always re-throw it if captured.") {
-}
+    CancellationException("kotlin.coroutines.cancellation.CancellationException should never get swallowed. Always re-throw it if captured.")
 
 fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, R>.() -> R) = object : Parser<Token, R> {
         override fun applyImpl(source: ParserSource<Token>): Parser.Result<R> {
@@ -61,7 +60,7 @@ class ParserCombinatorDSL<Token, R>(private val parser: Parser<Token, R>, privat
     override fun <S> Parser<Token, S>.bindAsResult(): Parser.Result<S> =
         this.apply(source).also(subResults::add)
 
-    override inline fun fail(error: String) = throw ParseInteruptedException(error)
+    override fun fail(error: String) = throw ParseInteruptedException(error)
 
     override fun success(value: R, subResults: List<Parser.Result<*>>): Parser.Success<R> = parser.success(value, subResults)
     override fun failure(message: String, subResults: List<Parser.Result<*>>): Parser.Failure<R> = parser.failure(message, subResults)

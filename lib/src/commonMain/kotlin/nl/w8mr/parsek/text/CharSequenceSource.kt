@@ -8,7 +8,7 @@ class CharSequenceSource(val input: CharSequence): ParserSource<Char> {
 
 //    override fun peek(): kotlin.Char? = if (hasNext()) input[index] else null
 
-    override fun next(): kotlin.Char? = if (hasNext()) input[index++] else null
+    override fun next(): Char? = if (hasNext()) input[index++] else null
 
     override fun hasNext(): Boolean = index < input.length
 }

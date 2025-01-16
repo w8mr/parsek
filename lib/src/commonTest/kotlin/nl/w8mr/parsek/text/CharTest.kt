@@ -1,8 +1,6 @@
 package nl.w8mr.parsek.text
 
 import nl.w8mr.parsek.ParseException
-import nl.w8mr.parsek.repeat
-import nl.w8mr.parsek.text.*
 
 import nl.w8mr.parsek.test.shouldThrowMessage
 import io.kotest.matchers.shouldBe

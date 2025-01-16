@@ -19,7 +19,7 @@ class MapTest {
     }
 
     @Test
-    fun `filter`() {
+    fun `filter values`() {
         val parser = number.filter { it < 25 }
         parser.parse("12abc") shouldBe 12
         shouldThrowMessage<ParseException>("Predicate not met") {
