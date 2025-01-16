@@ -2,32 +2,36 @@ package nl.w8mr.parsek
 
 import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.test.shouldThrowMessage
-import nl.w8mr.parsek.text.*
+import nl.w8mr.parsek.text.some
+import nl.w8mr.parsek.text.digit
+import nl.w8mr.parsek.text.letter
+import nl.w8mr.parsek.text.parse
+import nl.w8mr.parsek.text.parseTree
 import kotlin.test.Test
 
 class OneOfTest {
     @Test
     fun `oneOf first match`() {
-        val parser = oneOf(some(digit), some(letter)).asString
+        val parser = oneOf(some(digit), some(letter))
         parser.parse("123abc") shouldBe "123"
     }
 
     @Test
     fun `oneOf second match`() {
-        val parser = oneOf(some(digit), some(letter)).asString
+        val parser = oneOf(some(digit), some(letter))
         parser.parse("abc123") shouldBe "abc"
     }
 
     @Test
     fun `oneOf no match`() {
-        val parser = oneOf(some(digit), some(letter)).asString
+        val parser = oneOf(some(digit), some(letter))
         shouldThrowMessage<ParseException>("None of the parsers matches") {
             parser.parse("★☆abc123")
         }
     }
 
     @Test
-    fun `oneOf second match tree`() {
+    fun `oneOf no match tree`() {
         val parser = oneOf(some(digit), some(letter))
         val full = parser.parseTree("★☆abc123")
         full.first shouldBe null
@@ -42,19 +46,38 @@ class OneOfTest {
     }
 
     @Test
-    fun `oneOf no match tree`() {
+    fun `oneOf first match tree`() {
+        val parser = oneOf(some(digit), some(letter))
+        val full = parser.parseTree("123abc")
+        full.first shouldBe "123"
+        full.second shouldBe Parser.Success("123",
+            listOf(
+                Parser.Success<String>("123", listOf(
+                    Parser.Success("1"),
+                    Parser.Success("2"),
+                    Parser.Success("3"),
+                    Parser.Failure("Character a is not a digit"))
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `oneOf second match tree`() {
         val parser = oneOf(some(digit), some(letter))
         val full = parser.parseTree("abc123")
-        full.first shouldBe listOf('a', 'b', 'c')
-        full.second.subResults.size shouldBe 2
-        full.second.subResults[0] shouldBe Parser.Failure<Char>("Repeat only 0 elements found, needed at least 1", listOf(
-            Parser.Failure<Char>("Character a is not a digit")))
-        full.second.subResults[1] shouldBe Parser.Success<List<Char>>(
-            listOf('a', 'b', 'c'), listOf(
-                Parser.Success('a'),
-                Parser.Success('b'),
-                Parser.Success('c'),
-                Parser.Failure("Character 1 is not a letter")))
+        full.first shouldBe "abc"
+        full.second shouldBe Parser.Success("abc",
+            listOf(
+                Parser.Failure<String>("Repeat only 0 elements found, needed at least 1", listOf(
+                    Parser.Failure<Char>("Character a is not a digit"))),
+                Parser.Success<String>("abc", listOf(
+                    Parser.Success("a"),
+                    Parser.Success("b"),
+                    Parser.Success("c"),
+                    Parser.Failure("Character 1 is not a letter")))
+            )
+        )
     }
 
 }
