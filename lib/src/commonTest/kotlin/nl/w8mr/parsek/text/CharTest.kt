@@ -13,7 +13,7 @@ class CharTest {
     fun `char matches literal`() {
 // ZIPDOK start char-literal
         val parser = char('a')
-        parser.parse("ab") shouldBe 'a'
+        parser.parse("ab") shouldBe "a"
 // ZIPDOK end char-literal
     }
 
@@ -29,7 +29,7 @@ class CharTest {
     fun `char matches any character`() {
 // ZIPDOK start any-char-literal
         val parser = char
-        parser.parse("★☆") shouldBe '★'
+        parser.parse("★☆") shouldBe "★"
 // ZIPDOK end any-char-literal
     }
 
@@ -44,7 +44,7 @@ class CharTest {
     @Test
     fun `char mathces predicate`() {
         val parser = char { it.isLetter() }
-        parser.parse("ab") shouldBe 'a'
+        parser.parse("ab") shouldBe "a"
     }
 
     @Test
@@ -58,7 +58,7 @@ class CharTest {
     @Test
     fun `char mathces letter`() {
         val parser = letter
-        parser.parse("ab") shouldBe 'a'
+        parser.parse("ab") shouldBe "a"
     }
 
     @Test
@@ -72,7 +72,7 @@ class CharTest {
     @Test
     fun `char mathces digit`() {
         val parser = digit
-        parser.parse("12") shouldBe '1'
+        parser.parse("12") shouldBe "1"
     }
 
     @Test
@@ -81,13 +81,6 @@ class CharTest {
         shouldThrowMessage<ParseException>("Character a is not a digit") {
             parser.parse("ab")
         }
-    }
-
-    @Test
-    fun `chars asString`() {
-        val parser = repeat(letter).asString
-        parser.parse("abc123") shouldBe "abc"
-
     }
 
     @Test
