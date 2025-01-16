@@ -1,14 +1,15 @@
 package nl.w8mr.parsek
 
 
-fun <R, S, Token> Parser<Token, R>.map(message: String = "{error}", func: (R) -> (S)) = combi(message) {
+fun <Token, R, S> Parser<Token, R>.map(message: String = "{error}", func: (R) -> (S)) = combi<Token, S>(message) {
     func(-this@map)
 }
 
-fun <R, S, Token> Parser<Token, R>.mapResult(message: String = "{error}", func: (Parser.Result<R>) -> (Parser.Result<S>)) = combi(message) {
+fun <Token, R, S> Parser<Token, R>.mapResult(message: String = "{error}", func: (Parser.Result<R>) -> (Parser.Result<S>)) = combi<Token, S>(message) {
     func(this@mapResult.bindAsResult()).bind()
 }
-infix fun <Token, R> Parser<Token, R>.filter(predicate: (value: R) -> Boolean): Parser<Token, R> = filter("Predicate not met", predicate)
+
+infix fun <Token, R> Parser<Token, R>.filter(predicate: (value: R) -> Boolean): Parser<Token, R> = filter<Token, R>("Predicate not met", predicate)
 
 fun <Token, R> Parser<Token, R>.filter(message: String, predicate: (value: R) -> Boolean) =
     mapResult {
