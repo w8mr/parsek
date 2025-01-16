@@ -6,8 +6,7 @@ class ParseInteruptedException(override val message: String):
     CancellationException("kotlin.coroutines.cancellation.CancellationException should never get swallowed. Always re-throw it if captured.") {
 }
 
-fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, R>.() -> R): Parser<Token, R> {
-    return object : Parser<Token, R> {
+fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, R>.() -> R) = object : Parser<Token, R> {
         override fun applyImpl(source: ParserSource<Token>): Parser.Result<R> {
             val subResults = mutableListOf<Parser.Result<*>>()
             return try {
@@ -17,6 +16,18 @@ fun <Token, R> combi(message: String = "Combinator failed, parser number {index}
             } catch (ex: ParseInteruptedException) {
                 failure(message.replace("{index}", subResults.size.toString()).replace("{error}", ex.message), subResults)
             }
+        }
+    }
+
+fun <Token> literalCombi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, Unit>.() -> Unit) = object : LiteralParser<Token> {
+    override fun applyImpl(source: ParserSource<Token>): Parser.Result<Unit> {
+        val subResults = mutableListOf<Parser.Result<*>>()
+        return try {
+            val dsl = ParserCombinatorDSL(this, source, subResults)
+            val result = block.invoke(dsl)
+            success(result, subResults)
+        } catch (ex: ParseInteruptedException) {
+            failure(message.replace("{index}", subResults.size.toString()).replace("{error}", ex.message), subResults)
         }
     }
 }
