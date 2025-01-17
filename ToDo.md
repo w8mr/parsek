@@ -20,8 +20,6 @@ infix fun <R> Parser<R>.sepBy(separator: Parser<*>) = sepBy(separator, false)
 infix fun <R> Parser<R>.sepByAllowEmpty(separator: Parser<*>) = sepBy(separator, true)
 
 
-fun <R> ref(parserRef: KProperty0<Parser<R>>): Parser<R> =
-
 OperatorTable
 
 fun <R> lookAhead(parser: Parser<R>) = object: Parser<Unit>() {
