@@ -4,13 +4,14 @@ import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.text.*
 import kotlin.test.Test
 import nl.w8mr.parsek.text.zeroOrMore
+import or
 
 class JsonTest {
     @Test
     fun `basic json`() {
         val parser = object {
-            val ws = zeroOrMore(oneOf(char(' '),char('\t'),char('\n')))
-            val quotesString = seq(char('"'), zeroOrMore(char { it != '"'}),  char("")) { _, s, _ -> s }
+            val ws = zeroOrMore(' ' or '\t' or '\n')
+            val quotesString = seq(char('"'), zeroOrMore(char { it != '"'}),  char("")) { _, s, _ -> s }//val quotesString = '"' and zeroOrMore(char { it != '"'}) and '"'
             val key = quotesString
             val obj: Parser<Char, Any> = combi {
                 -ws
