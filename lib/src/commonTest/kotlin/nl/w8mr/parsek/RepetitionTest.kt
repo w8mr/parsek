@@ -111,6 +111,44 @@ class RepetitionTest {
         parser.parse("abc123") shouldBe ("abc" to "123")
     }
 
+    @Test
+    fun `untilLazy`() {
+        val parser = untilLazy(letter, char(','))
+        parser.parse("abc,123,abc") shouldBe ("abc" to ",")
+    }
+
+    @Test
+    fun `untilLazy failing`() {
+        val parser = untilLazy(letter, char(','))
+        shouldThrowMessage<ParseException>("Stop not found") {
+            parser.parse("abc123,123,abc")
+        }
+    }
+
+
+    @Test
+    fun `untilLazy less then minimum`() {
+        val parser = untilLazy(letter, char(','), min = 4)
+        shouldThrowMessage<ParseException>("Repeat only 3 elements found, needed at least 4") {
+            parser.parse("abc,123,abc")
+        }
+    }
+
+    @Test
+    fun `untilLazy over minimum`() {
+        val parser = untilLazy(letter, char(','), min = 2)
+        parser.parse("abc,123,abc") shouldBe ("abc" to ",")
+
+    }
+
+    @Test
+    fun `untilLazy over maximum`() {
+        val parser = untilLazy(letter, char(','), max = 2)
+        shouldThrowMessage<ParseException>("Stop not found") {
+            parser.parse("abc,123,abc")
+        }
+    }
+
 
 }
 
