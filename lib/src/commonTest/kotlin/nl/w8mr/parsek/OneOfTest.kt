@@ -2,11 +2,8 @@ package nl.w8mr.parsek
 
 import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.test.shouldThrowMessage
+import nl.w8mr.parsek.text.*
 import nl.w8mr.parsek.text.some
-import nl.w8mr.parsek.text.digit
-import nl.w8mr.parsek.text.letter
-import nl.w8mr.parsek.text.parse
-import nl.w8mr.parsek.text.parseTree
 import kotlin.test.Test
 
 class OneOfTest {
@@ -78,6 +75,24 @@ class OneOfTest {
                     Parser.Failure("Character 1 is not a letter")))
             )
         )
+    }
+
+    @Test
+    fun `or first match`() {
+        val parser = some(digit) or some(letter)
+        parser.parse("123abc") shouldBe "123"
+    }
+
+    @Test
+    fun `or second match`() {
+        val parser = some(digit) or some(letter)
+        parser.parse("abc123") shouldBe "abc"
+    }
+
+    @Test
+    fun `or third match`() {
+        val parser = char('a') or char('b') or char('c')
+        parser.parse("cba") shouldBe "c"
     }
 
 }
