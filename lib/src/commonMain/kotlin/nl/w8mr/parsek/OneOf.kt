@@ -18,3 +18,5 @@ fun <Token, R> oneOf(vararg parsers: Parser<Token, out R>) = combi("{error}") {
 //        }
 //    }.firstOrNull() ?: fail("None of the parsers matches")
 //}
+
+infix fun <Token, R> Parser<Token, out R>.or(other: Parser<Token, out R>) = oneOf(this, other)
