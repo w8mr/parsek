@@ -1,20 +1,19 @@
 package nl.w8mr.parsek
 
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.reflect.KClass
 
 class ParseInteruptedException(override val message: String):
     CancellationException("kotlin.coroutines.cancellation.CancellationException should never get swallowed. Always re-throw it if captured.")
 
 fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, R>.() -> R) = object : Parser<Token, R> {
-    override fun applyImpl(source: ParserSource<Token>) = result(source, block, message)
+    override fun applyImpl(source: ParserSource<Token>) = doApply(source, block, message)
 }
 
 fun <Token> literalCombi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, Unit>.() -> Unit) = object : LiteralParser<Token> {
-    override fun applyImpl(source: ParserSource<Token>) = result(source, block, message)
+    override fun applyImpl(source: ParserSource<Token>) = doApply(source, block, message)
 }
 
-fun <R, Token> Parser<Token, R>.result(
+fun <R, Token> Parser<Token, R>.doApply(
     source: ParserSource<Token>,
     block: CombinatorDSL<Token, R>.() -> R,
     message: String
