@@ -1,33 +1,31 @@
 package nl.w8mr.parsek
 
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.reflect.KClass
 
 class ParseInteruptedException(override val message: String):
     CancellationException("kotlin.coroutines.cancellation.CancellationException should never get swallowed. Always re-throw it if captured.")
 
 fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, R>.() -> R) = object : Parser<Token, R> {
-        override fun applyImpl(source: ParserSource<Token>): Parser.Result<R> {
-            val subResults = mutableListOf<Parser.Result<*>>()
-            return try {
-                val dsl = ParserCombinatorDSL(this, source, subResults)
-                val result = block.invoke(dsl)
-                success(result, subResults)
-            } catch (ex: ParseInteruptedException) {
-                failure(message.replace("{index}", subResults.size.toString()).replace("{error}", ex.message), subResults)
-            }
-        }
-    }
+    override fun applyImpl(source: ParserSource<Token>) = result(source, block, message)
+}
 
 fun <Token> literalCombi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, Unit>.() -> Unit) = object : LiteralParser<Token> {
-    override fun applyImpl(source: ParserSource<Token>): Parser.Result<Unit> {
-        val subResults = mutableListOf<Parser.Result<*>>()
-        return try {
-            val dsl = ParserCombinatorDSL(this, source, subResults)
-            val result = block.invoke(dsl)
-            success(result, subResults)
-        } catch (ex: ParseInteruptedException) {
-            failure(message.replace("{index}", subResults.size.toString()).replace("{error}", ex.message), subResults)
-        }
+    override fun applyImpl(source: ParserSource<Token>) = result(source, block, message)
+}
+
+fun <R, Token> Parser<Token, R>.result(
+    source: ParserSource<Token>,
+    block: CombinatorDSL<Token, R>.() -> R,
+    message: String
+): Parser.Result<R> {
+    val subResults = mutableListOf<Parser.Result<*>>()
+    return try {
+        val dsl = ParserCombinatorDSL(this, source, subResults)
+        val result = block.invoke(dsl)
+        success(result, subResults)
+    } catch (ex: ParseInteruptedException) {
+        failure(message.replace("{index}", subResults.size.toString()).replace("{error}", ex.message), subResults)
     }
 }
 
