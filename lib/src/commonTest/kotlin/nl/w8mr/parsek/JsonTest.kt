@@ -4,7 +4,7 @@ import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.text.*
 import kotlin.test.Test
 import nl.w8mr.parsek.text.any
-import or
+import nl.w8mr.parsek.text.or
 
 class JsonTest {
     @Test
