@@ -44,7 +44,10 @@ inline fun <R1, R2, R3, R4, R5, R6, R, Token> seq(p1: Parser<Token, R1>, p2: Par
                                                   crossinline map: (v1: R1, v2: R2, v3: R3, v4: R4, v5: R5, v6: R6) -> R) =
     combi { map(p1.bind(), p2.bind(), p3.bind(), p4.bind(), p5.bind(), p6.bind()) }
 
-infix fun <R, Token> Parser<Token, R>.and(other: Parser<Token, R>) = seq(this, other)
+//infix fun <R, Token> Parser<Token, R>.and(other: Parser<Token, R>) = seq(this, other)
 infix fun <R, Token> LiteralParser<Token>.and(other: Parser<Token, R>) = seq(this, other) { _, r -> r }
 infix fun <R, Token> Parser<Token, R>.and(other: LiteralParser<Token>) = seq(this, other) { r, _ -> r }
+infix fun <R1, R2, Token> Parser<Token, R1>.and(other: Parser<Token, R2>) = seq(this, other)
+
+
 
