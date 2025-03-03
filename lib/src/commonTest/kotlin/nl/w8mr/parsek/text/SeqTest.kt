@@ -5,17 +5,25 @@ import kotlin.test.Test
 
 class SeqTest {
     @Test
-    fun `char and textparser and char`() {
+    fun `literal and textparser and literal`() {
         val parser = '(' and digit and ')'
         parser.parse("(1)") shouldBe "1"
 
     }
 
     @Test
-    fun `char and parser and char`() {
+    fun `literal and parser and literal`() {
         val parser = '(' and number and ')'
         parser.parse("(12)") shouldBe 12
 
     }
+
+    @Test
+    fun `char and char`() {
+        val parser = char('(') and digit and char(')')
+        parser.parse("(1)") shouldBe "(1)"
+
+    }
+
 
 }
