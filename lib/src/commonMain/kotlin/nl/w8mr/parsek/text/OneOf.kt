@@ -1,6 +1,5 @@
 import nl.w8mr.parsek.Parser
 import nl.w8mr.parsek.oneOf
-import nl.w8mr.parsek.text.TextParser
 import nl.w8mr.parsek.text.char
 
 infix fun Char.or(other: Parser<Char, String>) = oneOf(char(this), other)

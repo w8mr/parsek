@@ -5,10 +5,10 @@ import nl.w8mr.parsek.ParserSource
 import nl.w8mr.parsek.combi
 
 fun <Token> repeat(
-    parser: TextParser<Token>,
+    parser: Parser<Token, String>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = object: TextParser<Token> {
+) = object: Parser<Token, String> {
     override fun applyImpl(source: ParserSource<Token>) = when (val result = nl.w8mr.parsek.repeat(parser, max, min).applyImpl(source)) {
             is Parser.Success -> success(result.value.joinToString(""), result.subResults)
             is Parser.Failure -> failure(result.message, result.subResults)
@@ -16,7 +16,7 @@ fun <Token> repeat(
     }
 
 fun <Token, S> untilLazy(
-    repeat: TextParser<Token>,
+    repeat: Parser<Token, String>,
     stop: Parser<Token, S>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
@@ -28,12 +28,12 @@ fun <Token, S> untilLazy(
 }
 
 
-operator fun <Token> TextParser<Token>.times(times: Int) = repeat(this, times, times)
-operator fun <Token> Int.times(parser: TextParser<Token>) = repeat(parser, this, this)
-operator fun <Token> IntRange.times(parser: TextParser<Token>) = repeat(parser, this.last, this.first)
+operator fun <Token> Parser<Token, String>.times(times: Int) = repeat(this, times, times)
+operator fun <Token> Int.times(parser: Parser<Token, String>) = repeat(parser, this, this)
+operator fun <Token> IntRange.times(parser: Parser<Token, String>) = repeat(parser, this.last, this.first)
 
-fun <Token> oneOrMore(parser: TextParser<Token>): TextParser<Token> = repeat(parser, min = 1)
-fun <Token> some(parser: TextParser<Token>): TextParser<Token> = repeat(parser, min = 1)
+fun <Token> oneOrMore(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser, min = 1)
+fun <Token> some(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser, min = 1)
 
-fun <Token> zeroOrMore(parser: TextParser<Token>): TextParser<Token> = repeat(parser)
-fun <Token> any(parser: TextParser<Token>): TextParser<Token> = repeat(parser)
+fun <Token> zeroOrMore(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser)
+fun <Token> any(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser)
