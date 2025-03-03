@@ -12,16 +12,17 @@ class JsonTest {
         val parser = object {
             val ws = any(' ' or '\t' or '\n')
             val quotesString = '"' and any(char { it != '"'}) and '"'
-            val key = seq(ws, quotesString, ws) { _, k, _-> k }
+            val key = ws and quotesString and ws
+            val optionalComma = literalCombi { -repeat(char(','), 1, 0) }
             val obj: Parser<Char, Any> = combi {
                 -ws
                 -char('{')
-                val properties = -zeroOrMore(seq(seq(key and ':' , seq(ws, ref(::value), ws) { _, v, _ -> v }), ws, repeat(char(','),1,0), ws) { p, _, _, _ -> p})
+                val properties = -zeroOrMore(key and ':' and ref(::value) and optionalComma)
                 -char('}')
                 properties.toMap()
 
             }
-            val value = oneOf(obj, quotesString)
+            val value = ws and oneOf(obj, quotesString) and ws
         }
         val example="""
             {
@@ -31,6 +32,7 @@ class JsonTest {
                 }
             }
         """.trimIndent()
+        print(parser.value.parseTree(example))
         parser.value.parse(example) shouldBe mapOf("s" to "string", "o" to mapOf("s" to "string"))
     }
 }
