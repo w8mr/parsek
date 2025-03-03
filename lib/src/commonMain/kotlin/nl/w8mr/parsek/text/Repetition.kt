@@ -36,3 +36,4 @@ fun <Token> oneOrMore(parser: TextParser<Token>): TextParser<Token> = repeat(par
 fun <Token> some(parser: TextParser<Token>): TextParser<Token> = repeat(parser, min = 1)
 
 fun <Token> zeroOrMore(parser: TextParser<Token>): TextParser<Token> = repeat(parser)
+fun <Token> any(parser: TextParser<Token>): TextParser<Token> = repeat(parser)

@@ -29,6 +29,7 @@ fun <Token, R> oneOrMore(parser: Parser<Token, R>): Parser<Token, List<R>> = rep
 fun <Token, R> some(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(parser, min = 1)
 
 fun <Token, R> zeroOrMore(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(parser)
+fun <Token, R> any(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(parser)
 
 fun <Token, R, S> untilLazy(
     repeat: Parser<Token, R>,
