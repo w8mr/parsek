@@ -1,5 +1,7 @@
 package nl.w8mr.parsek
 
+import nl.w8mr.parsek.text.literal
+
 fun <Token, R> repeat(
     parser: Parser<Token, R>,
     max: Int = Int.MAX_VALUE,
@@ -70,3 +72,5 @@ fun <Token, R, S> sepByGreedy(
     val others = -zeroOrMore(seq(sep, parser) { _, p -> p })
     start + others
 }
+
+infix fun <R, S, Token> Parser<Token, R>.sepBy(other: Parser<Token, S>) = sepByGreedy(this, other)

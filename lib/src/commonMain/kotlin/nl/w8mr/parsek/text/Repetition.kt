@@ -3,6 +3,7 @@ package nl.w8mr.parsek.text
 import nl.w8mr.parsek.Parser
 import nl.w8mr.parsek.ParserSource
 import nl.w8mr.parsek.combi
+import nl.w8mr.parsek.sepByGreedy
 
 fun <Token> repeat(
     parser: Parser<Token, String>,
@@ -37,3 +38,5 @@ fun <Token> some(parser: Parser<Token, String>): Parser<Token, String> = repeat(
 
 fun <Token> zeroOrMore(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser)
 fun <Token> any(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser)
+
+infix fun <R> Parser<Char, R>.sepBy(other: Char) = sepByGreedy(this, literal(other))
