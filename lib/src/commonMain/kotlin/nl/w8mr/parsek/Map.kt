@@ -5,6 +5,10 @@ fun <Token, R, S> Parser<Token, R>.map(message: String = "{error}", func: (R) ->
     func(-this@map)
 }
 
+fun <Token, R> Parser<Token, R>.asLiteral(message: String = "{error}") = literalCombi {
+    -this@asLiteral
+}
+
 fun <Token, R, S> Parser<Token, R>.mapResult(message: String = "{error}", func: (Parser.Result<R>) -> (Parser.Result<S>)) = combi<Token, S>(message) {
     func(this@mapResult.bindAsResult()).bind()
 }
