@@ -1,9 +1,6 @@
 package nl.w8mr.parsek.text
 
-import nl.w8mr.parsek.Parser
-import nl.w8mr.parsek.ParserSource
-import nl.w8mr.parsek.combi
-import nl.w8mr.parsek.sepByGreedy
+import nl.w8mr.parsek.*
 
 fun <Token> repeat(
     parser: Parser<Token, String>,
@@ -16,17 +13,26 @@ fun <Token> repeat(
         }
     }
 
-fun <Token, S> untilLazy(
-    repeat: Parser<Token, String>,
-    stop: Parser<Token, S>,
+fun <S> untilLazy(
+    repeat: Parser<Char, String>,
+    stop: Parser<Char, S>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = object: Parser<Token, Pair<String, S>> {
-    override fun applyImpl(source: ParserSource<Token>) = when (val result = nl.w8mr.parsek.untilLazy(repeat, stop, max, min).applyImpl(source)) {
+) = object: Parser<Char, Pair<String, S>> {
+    override fun applyImpl(source: ParserSource<Char>) = when (val result = nl.w8mr.parsek.untilLazy(repeat, stop, max, min).applyImpl(source)) {
         is Parser.Success -> success(result.value.first.joinToString("") to result.value.second, result.subResults)
         is Parser.Failure -> failure(result.message, result.subResults)
     }
 }
+
+fun untilLazy(
+    repeat: Parser<Char, String>,
+    stop: LiteralParser<Char>,
+    max: Int = Int.MAX_VALUE,
+    min: Int = 0,
+) = untilLazy(repeat, stop as Parser<Char, Unit>, max, min).map { it.first }
+
+infix fun Parser<Char, String>.until(stop: Char) = untilLazy(this, literal(stop))
 
 
 operator fun <Token> Parser<Token, String>.times(times: Int) = repeat(this, times, times)
