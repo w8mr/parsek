@@ -9,6 +9,12 @@ inline fun <Token, R> seq(vararg parsers: Parser<Token, out R>) = combi("{error}
 inline fun <R1, R2, R, Token> seq(p1: Parser<Token, R1>, p2: Parser<Token, R2>, crossinline map: (v1: R1, v2: R2) -> R) =
     combi { map(p1.bind(), p2.bind()) }
 
+inline fun <Token> seq(p1: LiteralParser<Token>, p2: LiteralParser<Token>) =
+    literalCombi {
+        p1.bind()
+        p2.bind()
+    }
+
 inline fun <R, Token> seq(p1: LiteralParser<Token>, p2: Parser<Token, R>) =
     combi {
         p1.bind()
