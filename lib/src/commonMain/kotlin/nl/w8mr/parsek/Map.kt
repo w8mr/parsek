@@ -5,6 +5,7 @@ fun <Token, R, S> Parser<Token, R>.map(message: String = "{error}", func: (R) ->
     func(-this@map)
 }
 
+//TODO: change to using parser function
 fun <Token, R> Parser<Token, R>.asLiteral(message: String = "{error}") = literalCombi {
     -this@asLiteral
 }

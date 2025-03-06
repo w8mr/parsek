@@ -6,7 +6,8 @@
 - Long / BigInteger number parsers
 - Error path vs Parse tree
 - Parse tree without errors
-- 
+- Extract parse function from Parser implementation
+
 
 
 Parsers:
