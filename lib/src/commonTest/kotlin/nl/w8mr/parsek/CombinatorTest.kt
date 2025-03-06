@@ -44,4 +44,23 @@ class CombinatorTest {
             parser.parse("6-6")
         }
     }
+
+    @Test
+    fun `literal combinator`() {
+        val parser: LiteralParser<Char> = literalCombi {
+            -digit
+        }
+        parser.parse("1") shouldBe Unit
+    }
+
+    @Test
+    fun `literal combinator fails`() {
+        val parser: LiteralParser<Char> = literalCombi {
+            -digit
+        }
+        shouldThrowMessage("Combinator failed, parser number 1 with error: Character a is not a digit") {
+            parser.parse("a")
+        }
+    }
+
 }
