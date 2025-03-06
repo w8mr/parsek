@@ -6,14 +6,15 @@ import nl.w8mr.parsek.map
 import nl.w8mr.parsek.some
 
 /**
- *  Matches on the [expected] character and failes with [message]
+ *  Matches on the [expected] character and failes with [message] if it succeeds the character is returned as
+ *  a string for easier combining with other porsers
  *
  * Example of parsing for a single character
  * <!--- ZIPDOK include src/commonTest/nl/w8mr/parsek/text/CharTest#char-literal -->
  * ```kotlin
- *     val parser = char('a')
- *     parser.parse("ab") shouldBe 'a'
- * ```
+ *    val parser = char('a')
+ *    parser.parse("ab") shouldBe "a"
+ *  ```
  * <!--- ZIPDOK end -->
  */
 fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object : Parser<Char, String> {

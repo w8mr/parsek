@@ -8,15 +8,15 @@ import kotlin.test.Test
 
 class CharTest {
     @Test
-    fun `char matches literal`() {
-// ZIPDOK start char-literal
+    fun `char matches fixed char`() {
+// ZIPDOK start char-fixed
         val parser = char('a')
         parser.parse("ab") shouldBe "a"
-// ZIPDOK end char-literal
+// ZIPDOK end char-fixed
     }
 
     @Test
-    fun `char doesn't match literal`() {
+    fun `char doesn't match fixed char`() {
         val parser = char('b')
         shouldThrowMessage<ParseException>("Character a does not meet expected b") {
             parser.parse("ab")
