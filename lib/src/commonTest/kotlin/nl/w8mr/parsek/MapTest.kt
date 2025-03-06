@@ -20,11 +20,31 @@ class MapTest {
 
     @Test
     fun `filter values`() {
-        val parser = number.filter { it < 25 }
+        val parser = number filter { it < 25 }
         parser.parse("12abc") shouldBe 12
+    }
+
+    @Test
+    fun `filter values fails`() {
+        val parser = number filter { it < 25 }
         shouldThrowMessage<ParseException>("Predicate not met") {
             parser.parse("123abc")
         }
+    }
+
+
+    @Test
+    fun `filter values fails with message`() {
+        val parser = number.filter("Number not below 25") { it < 25 }
+        shouldThrowMessage<ParseException>("Number not below 25") {
+            parser.parse("123abc")
+        }
+    }
+
+    @Test
+    fun `asLiteral`() {
+        val parser: LiteralParser<Char> = number.asLiteral()
+        parser.parse("12abc") shouldBe Unit
     }
 
 }
