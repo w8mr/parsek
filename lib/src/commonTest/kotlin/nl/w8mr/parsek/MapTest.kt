@@ -8,6 +8,7 @@ import nl.w8mr.parsek.text.some
 import kotlin.test.Test
 import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.test.shouldThrowMessage
+import nl.w8mr.parsek.text.literal
 
 class MapTest {
     @Test
@@ -46,5 +47,12 @@ class MapTest {
         val parser: LiteralParser<Char> = number.asLiteral()
         parser.parse("12abc") shouldBe Unit
     }
+
+    @Test
+    fun `literal as value`() {
+        val parser = literal("true") value true
+        parser.parse("true 12") shouldBe true
+    }
+
 
 }
