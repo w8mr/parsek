@@ -38,9 +38,9 @@ class JsonTest {
             val members = member sepBy ','
             val obj = ('{' and members and '}').map { it.toMap() } or
                     ('{' and ws and '}').map { emptyMap() }
-            val _true = ('t' and 'r' and 'u' and 'e').map { true }
-            val _false = ('f' and 'a' and 'l' and 's' and 'e').map { false }
-            val _null = ('n' and 'u' and 'l' and 'l').map { null }
+            val _true = "true" value true
+            val _false = "false" value false
+            val _null = "null" value null
             val onenine = char { it in '1'..'9'}
             val digit = char('0') or onenine
             val digits = some(digit)

@@ -24,3 +24,5 @@ fun <Token, R> Parser<Token, R>.filter(message: String, predicate: (value: R) ->
             it
     }
 
+infix fun <Token, R> LiteralParser<Token>.value(value: R) = this.map { value }
+
