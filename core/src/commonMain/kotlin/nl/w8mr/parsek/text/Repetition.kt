@@ -34,6 +34,8 @@ fun untilLazy(
 
 infix fun Parser<Char, String>.until(stop: Char) = untilLazy(this, literal(stop))
 
+fun optional(char: Char) = optional(literal(char))
+fun optional(text: String) = optional(literal(text))
 
 operator fun <Token> Parser<Token, String>.times(times: Int) = repeat(this, times, times)
 operator fun <Token> Int.times(parser: Parser<Token, String>) = repeat(parser, this, this)
@@ -46,3 +48,4 @@ fun <Token> zeroOrMore(parser: Parser<Token, String>): Parser<Token, String> = r
 fun <Token> any(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser)
 
 infix fun <R> Parser<Char, R>.sepBy(other: Char) = sepByGreedy(this, literal(other))
+infix fun <R> Parser<Char, R>.sepBy(other: String) = sepByGreedy(this, literal(other))

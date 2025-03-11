@@ -1,2 +1,2 @@
 rootProject.name = "parsek"
-include("lib")
+include("core")

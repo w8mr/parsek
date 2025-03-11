@@ -1,21 +1,13 @@
-
-
-plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.dokka)
-}
-
-subprojects {
-    apply(plugin = "org.jetbrains.dokka")
-}
-
 repositories {
     mavenCentral()
+    mavenLocal()
 }
+
+group = parent?.group ?: group
+version = parent?.version ?: version
 
 kotlin {
     jvm {
-//        withJava()
         java {
             toolchain {
                 languageVersion.set(JavaLanguageVersion.of(11))

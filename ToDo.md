@@ -1,5 +1,4 @@
 # Todo
-- Char/String/Unit Parser (special handling and/seq/combi)
 - Lazy parser // until parser?
 - Lazy subresults
 - Better documentation
@@ -28,9 +27,5 @@ fun eof() = object: Parser<Unit>() {
 
 
 fun regex(pattern: String) = object :  Parser<String>() {
-
-Text
-
-fun literal(literal: String) = object: Parser<Unit>() {
 
 ```
