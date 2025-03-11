@@ -120,17 +120,17 @@ p=9,5 v=-3,-3
 
     @Test
     fun `aoc2025-15`() {
-        val smallExample = """########
-#..O.O.#
-##@.O..#
-#...O..#
-#.#.O..#
-#...O..#
-#......#
-########
-
-<^^>>>vv<v>>v<<
-"""
+        val smallExample = """|########
+                              |#..O.O.#
+                              |##@.O..#
+                              |#...O..#
+                              |#.#.O..#
+                              |#...O..#
+                              |#......#
+                              |########
+                              |
+                              |<^^>>>vv<v>>v<<
+                              |""".trimMargin()
 
         val cell = oneOf(
             '#' value Wall,
@@ -166,19 +166,88 @@ p=9,5 v=-3,-3
     data class State(val a: Long, val b: Long, val c: Long)
     @Test
     fun `aoc2025-18`() {
-        val example="""Register A: 729
-Register B: 0
-Register C: 0
+        val example="""|Register A: 729
+                       |Register B: 0
+                       |Register C: 0
+                       |
+                       |Program: 0,1,5,4,3,0
+                       |""".trimMargin()
 
-Program: 0,1,5,4,3,0
-"""
-
-        val register = "Register " and ('A' or 'B' or 'C') and ": " and longNumber and "\n"
-        val registers = register * 3 map { (a, b, c) -> State(a, b, c) }
+        fun register(letter: Char) = "Register $letter: " and longNumber and "\n"
+        val registers = register('A') and register('B') and register('C') map (::State)
         val program = "Program: " and ((number and ',' and number) sepBy ",")
         val parser = registers and '\n' and program
         val parsed = parser.parse(example)
         assertEquals(State(729, 0, 0), parsed.first)
         assertEquals(listOf(0 to 1, 5 to 4, 3 to 0), parsed.second)
+    }
+
+    enum class Operation(val op: (a:Int, b: Int) -> Int) {
+        XOR(Int::xor),
+        AND(Int::and),
+        OR(Int::or)
+    }
+    data class Gate(val wire1: String, val op: Operation, val wire2: String, val outWire: String)
+
+    @Test
+    fun `aoc2025-24`() {
+        val example="""|x00: 1
+                       |x01: 0
+                       |x02: 1
+                       |x03: 1
+                       |x04: 0
+                       |y00: 1
+                       |y01: 1
+                       |y02: 1
+                       |y03: 1
+                       |y04: 1
+                       |
+                       |ntg XOR fgs -> mjb
+                       |y02 OR x01 -> tnw
+                       |kwq OR kpj -> z05
+                       |x00 OR x03 -> fst
+                       |tgd XOR rvg -> z01
+                       |vdt OR tnw -> bfw
+                       |bfw AND frj -> z10
+                       |ffh OR nrd -> bqk
+                       |y00 AND y03 -> djm
+                       |y03 OR y00 -> psh
+                       |bqk OR frj -> z08
+                       |tnw OR fst -> frj
+                       |gnj AND tgd -> z11
+                       |bfw XOR mjb -> z00
+                       |x03 OR x00 -> vdt
+                       |gnj AND wpb -> z02
+                       |x04 AND y00 -> kjc
+                       |djm OR pbm -> qhw
+                       |nrd AND vdt -> hwm
+                       |kjc AND fst -> rvg
+                       |y04 OR y02 -> fgs
+                       |y01 AND x02 -> pbm
+                       |ntg OR kjc -> kwq
+                       |psh XOR fgs -> tgd
+                       |qhw XOR tgd -> z09
+                       |pbm OR djm -> kpj
+                       |x03 XOR y03 -> ffh
+                       |x00 XOR y04 -> ntg
+                       |bfw OR bqk -> z06
+                       |nrd XOR fgs -> wpb
+                       |frj XOR qhw -> z04
+                       |bqk OR frj -> z07
+                       |y03 OR x01 -> nrd
+                       |hwm AND bqk -> z03
+                       |tgd XOR rvg -> z12
+                       |tnw OR pbm -> gnj
+                       |""".trimMargin()
+
+
+        val wire = char * 3
+        val inp = wire and ": " and number and '\n'
+        val inputs = some(inp)
+        val operation = oneOf("XOR" value Operation.XOR, "AND" value Operation.AND, "OR" value Operation.OR )
+        val gate = wire and " " and operation and " " and wire and " -> " and wire map (::Gate)
+        val gatesParser = (gate sepBy "\n").map { it.map { it.outWire to it}.toMap() }
+        val parser = inputs and "\n" and gatesParser
+        println(parser.parse(example))
     }
 }
