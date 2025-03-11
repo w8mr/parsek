@@ -1,9 +1,11 @@
 package nl.w8mr.parsek
 
 
-fun <Token, R, S> Parser<Token, R>.map(message: String = "{error}", func: (R) -> (S)) = combi<Token, S>(message) {
+fun <Token, R, S> Parser<Token, R>.map(message: String, func: (R) -> (S)) = combi<Token, S>(message) {
     func(-this@map)
 }
+
+infix fun <Token, R, S> Parser<Token, R>.map(func: (R) -> (S)) = map("{error}", func)
 
 //TODO: change to using parser function
 fun <Token, R> Parser<Token, R>.asLiteral(message: String = "{error}") = literalCombi {

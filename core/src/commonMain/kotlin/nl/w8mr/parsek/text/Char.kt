@@ -3,6 +3,8 @@ package nl.w8mr.parsek.text
 import nl.w8mr.parsek.ParserSource
 import nl.w8mr.parsek.Parser
 import nl.w8mr.parsek.map
+import nl.w8mr.parsek.optional
+import nl.w8mr.parsek.seq
 import nl.w8mr.parsek.some
 
 /**
@@ -42,6 +44,8 @@ val digit get() = char("Character {actual} is not a digit", Char::isDigit)
 val letter get() = char("Character {actual} is not a letter", Char::isLetter)
 val char get() = char()
 val number get() = some(digit).map { it.joinToString("").toInt() }
+val longNumber get() = some(digit).map { it.joinToString("").toLong() }
+val signedNumber = seq(optional(char('-')), number) { m, n -> if (m == "-") -n else n }
 
 val Parser<Char, List<Char>>.asString get(): Parser<Char, String> = this.map {
     it.joinToString("")

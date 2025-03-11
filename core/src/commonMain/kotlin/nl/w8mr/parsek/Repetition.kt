@@ -23,6 +23,12 @@ fun <Token, R> repeat(
         list.map { it.value }
     }
 
+fun <Token> repeat(parser: LiteralParser<Token>, max: Int = Int.MAX_VALUE, min: Int = 0): Parser<Token, Unit> = repeat(parser as Parser<Token, Unit>, max, min).asLiteral()
+
+fun <Token, R: Any> optional(parser: Parser<Token, R>): Parser<Token, R?> = repeat(parser, 1, 0).map { if (it.isNotEmpty()) it[0] else null }
+fun <Token> optional(parser: LiteralParser<Token>) = repeat(parser, 1, 0)
+
+
 operator fun <Token, R> Parser<Token, R>.times(times: Int) = repeat(this, times, times)
 operator fun <Token, R> Int.times(parser: Parser<Token, R>) = repeat(parser, this, this)
 operator fun <Token, R> IntRange.times(parser: Parser<Token, R>) = repeat(parser, this.last, this.first)
