@@ -31,13 +31,13 @@ class JsonTest {
             val json = element
             val elements = element sepBy ','
             val array = ('[' and elements and ']') or
-                    ('[' and ws and ']').map { emptyList() }
+                    ('[' and ws and ']').value(emptyList())
             val _string = '"' and (char() until '"')
             val key = ws and _string and ws
             val member = key and ':' and element
             val members = member sepBy ','
             val obj = ('{' and members and '}').map { it.toMap() } or
-                    ('{' and ws and '}').map { emptyMap() }
+                    ('{' and ws and '}').value(emptyMap())
             val _true = "true" value true
             val _false = "false" value false
             val _null = "null" value null

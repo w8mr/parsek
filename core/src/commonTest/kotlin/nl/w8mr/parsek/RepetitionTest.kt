@@ -149,6 +149,43 @@ class RepetitionTest {
         }
     }
 
+    @Test
+    fun `sepByGreedy`() {
+        val parser = sepByGreedy(letter, char(','))
+        parser.parse("a,b,c") shouldBe listOf("a", "b", "c")
+    }
+
+    @Test
+    fun `sepByGreedy fail after separator`() {
+        val parser = sepByGreedy(letter, char(',')) and char(',')
+        parser.parse("a,b,c,1") shouldBe (listOf("a", "b", "c") to ",")
+    }
+
+    @Test
+    fun `sepByGreedy empty`() {
+        val parser = sepByGreedy(letter, char(','))
+        shouldThrowMessage<ParseException>("Combinator failed, parser number 1 with error: Character 1 is not a letter") {
+            parser.parse("1,2,3") shouldBe emptyList<String>()
+        }
+    }
+
+    @Test
+    fun `sepByGreedyAllowEmpty`() {
+        val parser = sepByGreedyAllowEmpty(letter, char(','))
+        parser.parse("a,b,c") shouldBe listOf("a", "b", "c")
+    }
+
+    @Test
+    fun `sepByGreedyAllowEmpty fail after separator`() {
+        val parser = sepByGreedyAllowEmpty(letter, char(',')) and char(',')
+        parser.parse("a,b,c,1") shouldBe (listOf("a", "b", "c") to ",")
+    }
+
+    @Test
+    fun `sepByGreedyAllowEmpty empty`() {
+        val parser = sepByGreedyAllowEmpty(letter, char(','))
+        parser.parse("1,2,3") shouldBe emptyList<String>()
+    }
 
 }
 

@@ -53,6 +53,7 @@ inline fun <R1, R2, R3, R4, R5, R6, R, Token> seq(p1: Parser<Token, R1>, p2: Par
 //infix fun <R, Token> Parser<Token, R>.and(other: Parser<Token, R>) = seq(this, other)
 infix fun <R, Token> LiteralParser<Token>.and(other: Parser<Token, R>) = seq(this, other) { _, r -> r }
 infix fun <R, Token> Parser<Token, R>.and(other: LiteralParser<Token>) = seq(this, other) { r, _ -> r }
+infix fun <Token> LiteralParser<Token>.and(other: LiteralParser<Token>) = seq(this, other)
 infix fun <R1, R2, Token> Parser<Token, R1>.and(other: Parser<Token, R2>) = seq(this, other)
 
 

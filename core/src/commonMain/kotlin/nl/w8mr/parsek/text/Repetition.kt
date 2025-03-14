@@ -41,8 +41,14 @@ operator fun <Token> Parser<Token, String>.times(times: Int) = repeat(this, time
 operator fun <Token> Int.times(parser: Parser<Token, String>) = repeat(parser, this, this)
 operator fun <Token> IntRange.times(parser: Parser<Token, String>) = repeat(parser, this.last, this.first)
 
+fun <Token> oneOrMore(parser: LiteralParser<Token>): LiteralParser<Token> = repeat(parser, min = 1)
+fun <Token> some(parser: LiteralParser<Token>): LiteralParser<Token> = repeat(parser, min = 1)
+
 fun <Token> oneOrMore(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser, min = 1)
 fun <Token> some(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser, min = 1)
+
+fun <Token> zeroOrMore(parser: LiteralParser<Token>): LiteralParser<Token> = repeat(parser)
+fun <Token> any(parser: LiteralParser<Token>): LiteralParser<Token> = repeat(parser)
 
 fun <Token> zeroOrMore(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser)
 fun <Token> any(parser: Parser<Token, String>): Parser<Token, String> = repeat(parser)
