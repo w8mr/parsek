@@ -1,5 +1,6 @@
 import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.text.*
+import nl.w8mr.parsek.*
 import kotlin.test.Test
 
 class OneOfTest {

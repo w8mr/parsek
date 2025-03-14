@@ -29,5 +29,9 @@ fun <Token, R> Parser<Token, R>.filter(message: String, predicate: (value: R) ->
             it
     }
 
-infix fun <Token, R> LiteralParser<Token>.value(value: R) = this.map { value }
+infix fun <Token, R> LiteralParser<Token>.value(value: R) = (this as Parser<Token, Unit>).map { value }
+infix fun <Token> LiteralParser<Token>.effect(func: () -> Unit) = literalCombi<Token>("{error}") {
+    this@effect.bind()
+    func()
+}
 

@@ -23,7 +23,34 @@ fun <Token, R> repeat(
         list.map { it.value }
     }
 
-fun <Token> repeat(parser: LiteralParser<Token>, max: Int = Int.MAX_VALUE, min: Int = 0): Parser<Token, Unit> = repeat(parser as Parser<Token, Unit>, max, min).asLiteral()
+//infix fun <R, S, Token> Parser<Token, R>.sepByAllowEmpty(other: Parser<Token, S>) = combi<Token, List<R>> {
+//    val p: Parser<Token, R> = this@sepByAllowEmpty
+//    when (val firstResult = p.bindAsResult() ) {
+//        is Parser.Failure<R> -> { emptyList<R>() }
+//        is Parser.Success<R> -> {
+//            val result = mutableListOf<R>(firstResult.value)
+//            while(true) {
+//                val mark = mark()
+//                when (val nextResult = (other.asLiteral() and p).bindAsResult()) {
+//                    is Parser.Failure<R> -> {
+//                        reset(mark)
+//                        break
+//                    }
+//                    is Parser.Success<R> -> {
+//                        result.add(nextResult.value)
+//                    }
+//                }
+//            }
+//            result.toList()
+//        }
+//    }
+//
+//}
+//
+//
+//
+
+fun <Token> repeat(parser: LiteralParser<Token>, max: Int = Int.MAX_VALUE, min: Int = 0): LiteralParser<Token> = repeat(parser as Parser<Token, Unit>, max, min).asLiteral()
 
 fun <Token, R: Any> optional(parser: Parser<Token, R>): Parser<Token, R?> = repeat(parser, 1, 0).map { if (it.isNotEmpty()) it[0] else null }
 fun <Token> optional(parser: LiteralParser<Token>) = repeat(parser, 1, 0)
@@ -38,6 +65,7 @@ fun <Token, R> some(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(p
 
 fun <Token, R> zeroOrMore(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(parser)
 fun <Token, R> any(parser: Parser<Token, R>): Parser<Token, List<R>> = repeat(parser)
+fun <Token> any(parser: LiteralParser<Token>): LiteralParser<Token> = repeat(parser).asLiteral()
 
 fun <Token, R, S> untilLazy(
     repeat: Parser<Token, R>,
@@ -81,9 +109,23 @@ fun <Token, R, S> sepByGreedy(
     parser: Parser<Token, R>,
     sep: Parser<Token, S>
 ) = combi {
-    val start = -repeat(parser, 0, 1)
+    val start = -parser
     val others = -zeroOrMore(seq(sep, parser) { _, p -> p })
-    start + others
+    listOf(start) + others
 }
 
+fun <Token, R, S> sepByGreedyAllowEmpty(
+    parser: Parser<Token, R>,
+    sep: Parser<Token, S>
+) = combi {
+    val start = when (val first = parser.bindAsResult()) {
+        is Parser.Success -> first.value
+        is Parser.Failure -> return@combi emptyList()
+    }
+    val others = -zeroOrMore(seq(sep, parser) { _, p -> p })
+    listOf(start) + others
+}
+
+
 infix fun <R, S, Token> Parser<Token, R>.sepBy(other: Parser<Token, S>) = sepByGreedy(this, other)
+infix fun <R, S, Token> Parser<Token, R>.sepByAllowEmpty(other: Parser<Token, S>) = sepByGreedyAllowEmpty(this, other)

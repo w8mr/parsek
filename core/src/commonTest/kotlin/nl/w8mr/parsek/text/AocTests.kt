@@ -173,7 +173,7 @@ p=9,5 v=-3,-3
                        |Program: 0,1,5,4,3,0
                        |""".trimMargin()
 
-        fun register(letter: Char) = "Register $letter: " and longNumber and "\n"
+        fun register(which: Char) = "Register $which: " and longNumber and "\n"
         val registers = register('A') and register('B') and register('C') map (::State)
         val program = "Program: " and ((number and ',' and number) sepBy ",")
         val parser = registers and '\n' and program

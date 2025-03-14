@@ -3,20 +3,18 @@
 //import com.vanniktech.maven.publish.JavadocJar
 
 group = "nl.w8mr.parsek"
-version = "0.0.2"
+version = "0.0.3-SNAPSHOT"
 
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.dokka)
-//    alias(libs.plugins.mavenPublish)
     `maven-publish`
     signing
 }
 
 val multiplatformId = libs.plugins.kotlinMultiplatform.get().pluginId
 val dokkaId = libs.plugins.dokka.get().pluginId
-//val mavenPublishId = libs.plugins.mavenPublish.get().pluginId
 
 subprojects {
     repositories {

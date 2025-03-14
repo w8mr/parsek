@@ -1,5 +1,8 @@
 package nl.w8mr.parsek
 
+import nl.w8mr.parsek.text.CharSequenceSource
+import kotlin.reflect.KClass
+
 
 interface Parser<Token, R> {
     sealed class Result<R>(open val subResults: List<Result<*>> = emptyList())
@@ -69,4 +72,42 @@ interface ParserSource<Token> {
 
 
 }
+
+class ListSource<Token>(val input: List<Token>): ParserSource<Token> {
+    override var index = 0
+    override fun mark(): Int = index
+    override fun reset(mark: Int) { index = mark }
+    override fun release(mark: Int) = Unit
+    override val state: MutableMap<String, Any> get() = mutableMapOf()
+
+//    override fun peek(): kotlin.Char? = if (hasNext()) input[index] else null
+
+    override fun next(): Token? = if (hasNext()) input[index++] else null
+
+    override fun hasNext(): Boolean = index < input.size
+}
+
+fun <Token, R> Parser<Token, R>.parse(input: List<Token>) =
+    this.parse(ListSource(input))
+
+fun <Token, R : Any> token(kClass: KClass<R>) =
+    object : Parser<Token, R> {
+        override fun applyImpl(source: ParserSource<Token>): Parser.Result<R> {
+            val mark = source.mark()
+            val match = source.next()
+            return when (kClass.isInstance(match)) {
+                false -> {
+                    source.reset(mark)
+                    failure("token is not instance of ${kClass.simpleName}")
+                }
+
+                true -> {
+                    source.release(mark)
+                    success(match as R)
+                }
+            }
+        }
+    }
+
+
 
