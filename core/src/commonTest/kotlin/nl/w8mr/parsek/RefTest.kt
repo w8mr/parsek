@@ -4,10 +4,12 @@ import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.test.shouldThrowMessage
 import nl.w8mr.parsek.text.char
 import nl.w8mr.parsek.text.parse
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class RefTest {
     @Test
+    @JsName("SimpleRef")
     fun `simple ref`() {
         val holder = object {
             val c: Parser<Char, Pair<String, String>> = seq(ref(::a), ref(::b))
@@ -19,6 +21,7 @@ class RefTest {
     }
 
     @Test
+    @JsName("RecursiveRef")
     fun `recursive ref`() {
         data class Group(val subGroups: List<Group>)
         val holder = object {
