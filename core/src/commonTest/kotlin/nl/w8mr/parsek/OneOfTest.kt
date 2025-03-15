@@ -95,4 +95,10 @@ class OneOfTest {
         parser.parse("cba") shouldBe "c"
     }
 
+    @Test
+    fun `liter or match`() {
+        val parser = literal('a') or literal('b') or literal('c')
+        parser.parse("cba") shouldBe Unit
+    }
+
 }
