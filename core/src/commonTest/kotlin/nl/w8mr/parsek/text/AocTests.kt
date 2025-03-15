@@ -6,9 +6,11 @@ import nl.w8mr.parsek.*
 import nl.w8mr.parsek.text.AocTests.CellType.*
 import nl.w8mr.parsek.text.AocTests.Direction.*
 import nl.w8mr.parsek.text.AocTests.State
+import kotlin.js.JsName
 
 class AocTests {
     @Test
+    @JsName("Aoc202507")
     fun `aoc2025-07`() {
         val example = """190: 10 19
 3267: 81 40 27
@@ -38,6 +40,7 @@ class AocTests {
     }
 
     @Test
+    @JsName("Aoc202513")
     fun `aoc2025-13`() {
         val example = """Button A: X+94, Y+34
 Button B: X+22, Y+67
@@ -73,6 +76,7 @@ Prize: X=18641, Y=10279
     }
 
     @Test
+    @JsName("Aoc202514")
     fun `aoc2025-14`() {
         val example = """p=0,4 v=3,-3
 p=6,3 v=-1,-3
@@ -119,6 +123,7 @@ p=9,5 v=-3,-3
     }
 
     @Test
+    @JsName("Aoc202515")
     fun `aoc2025-15`() {
         val smallExample = """|########
                               |#..O.O.#
@@ -165,6 +170,7 @@ p=9,5 v=-3,-3
 
     data class State(val a: Long, val b: Long, val c: Long)
     @Test
+    @JsName("Aoc202518")
     fun `aoc2025-18`() {
         val example="""|Register A: 729
                        |Register B: 0
@@ -190,6 +196,7 @@ p=9,5 v=-3,-3
     data class Gate(val wire1: String, val op: Operation, val wire2: String, val outWire: String)
 
     @Test
+    @JsName("Aoc202524")
     fun `aoc2025-24`() {
         val example="""|x00: 1
                        |x01: 0

@@ -7,6 +7,7 @@ import nl.w8mr.parsek.text.any
 import nl.w8mr.parsek.text.or
 import nl.w8mr.parsek.text.some
 import nl.w8mr.parsek.text.and
+import kotlin.js.JsName
 
 
 class JsonTest {
@@ -16,6 +17,7 @@ class JsonTest {
     }
 
     @Test
+    @JsName("basicJson")
     fun `basic json`() {
         val parser = object {
             private infix fun Long.power(exponentVal: Long): Long = when {

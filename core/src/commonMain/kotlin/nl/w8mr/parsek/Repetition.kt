@@ -103,7 +103,7 @@ fun <R, Token> untilLazy(
     stop: LiteralParser<Token>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = untilLazy(repeat, stop as Parser<Token, Unit>, max, min).map { it.first }
+) = untilLazy(repeat, stop as Parser<Token, Unit>, max, min).map { (r, u) -> r }
 
 fun <Token, R, S> sepByGreedy(
     parser: Parser<Token, R>,

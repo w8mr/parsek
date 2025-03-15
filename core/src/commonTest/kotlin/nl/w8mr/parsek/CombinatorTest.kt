@@ -5,10 +5,12 @@ import nl.w8mr.parsek.text.*
 import kotlin.test.Test
 import io.kotest.matchers.shouldBe
 import io.kotest.assertions.throwables.shouldThrowMessage
+import kotlin.js.JsName
 
 
 class CombinatorTest {
     @Test
+    @JsName("combinatorShouldCombineTwoParsers")
     fun `combinator should combine two parsers`() {
         val parser = combi {
             val a = -digit
@@ -20,6 +22,7 @@ class CombinatorTest {
     }
 
     @Test
+    @JsName("combinatorShouldFailWhenFirstParserFails")
     fun `combinator should fail when first parser fails`() {
         val parser = combi {
             val a = -digit
@@ -33,6 +36,7 @@ class CombinatorTest {
     }
 
     @Test
+    @JsName("combinatorShouldFailWhenThirdParserFails")
     fun `combinator should fail when third parser fails`() {
         val parser = combi {
             val a = -digit
@@ -46,6 +50,7 @@ class CombinatorTest {
     }
 
     @Test
+    @JsName("literalCombinator")
     fun `literal combinator`() {
         val parser: LiteralParser<Char> = literalCombi {
             -digit
@@ -54,6 +59,7 @@ class CombinatorTest {
     }
 
     @Test
+    @JsName("literalCombinatorFails")
     fun `literal combinator fails`() {
         val parser: LiteralParser<Char> = literalCombi {
             -digit

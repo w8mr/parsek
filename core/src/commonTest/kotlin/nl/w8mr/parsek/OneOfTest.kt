@@ -4,22 +4,26 @@ import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.test.shouldThrowMessage
 import nl.w8mr.parsek.text.*
 import nl.w8mr.parsek.text.some
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class OneOfTest {
     @Test
+    @JsName("OneOfFirstMatch")
     fun `oneOf first match`() {
         val parser = oneOf(some(digit), some(letter))
         parser.parse("123abc") shouldBe "123"
     }
 
     @Test
+    @JsName("OneOfSecondMatch")
     fun `oneOf second match`() {
         val parser = oneOf(some(digit), some(letter))
         parser.parse("abc123") shouldBe "abc"
     }
 
     @Test
+    @JsName("OneOfNoMatch")
     fun `oneOf no match`() {
         val parser = oneOf(some(digit), some(letter))
         shouldThrowMessage<ParseException>("None of the parsers matches") {
@@ -28,6 +32,7 @@ class OneOfTest {
     }
 
     @Test
+    @JsName("OneOfNoMatchTree")
     fun `oneOf no match tree`() {
         val parser = oneOf(some(digit), some(letter))
         val full = parser.parseTree("★☆abc123")
@@ -43,6 +48,7 @@ class OneOfTest {
     }
 
     @Test
+    @JsName("OneOfFirstMatchTree")
     fun `oneOf first match tree`() {
         val parser = oneOf(some(digit), some(letter))
         val full = parser.parseTree("123abc")
@@ -60,6 +66,7 @@ class OneOfTest {
     }
 
     @Test
+    @JsName("OneOfSecondMatchTree")
     fun `oneOf second match tree`() {
         val parser = oneOf(some(digit), some(letter))
         val full = parser.parseTree("abc123")
@@ -78,24 +85,28 @@ class OneOfTest {
     }
 
     @Test
+    @JsName("OrFirstMatch")
     fun `or first match`() {
         val parser = some(digit) or some(letter)
         parser.parse("123abc") shouldBe "123"
     }
 
     @Test
+    @JsName("OrSecondMatch")
     fun `or second match`() {
         val parser = some(digit) or some(letter)
         parser.parse("abc123") shouldBe "abc"
     }
 
     @Test
+    @JsName("OrThirdMatch")
     fun `or third match`() {
         val parser = char('a') or char('b') or char('c')
         parser.parse("cba") shouldBe "c"
     }
 
     @Test
+    @JsName("LiterOrMatch")
     fun `liter or match`() {
         val parser = literal('a') or literal('b') or literal('c')
         parser.parse("cba") shouldBe Unit
