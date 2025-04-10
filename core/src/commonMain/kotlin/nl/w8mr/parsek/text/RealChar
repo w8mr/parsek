@@ -1,0 +1,20 @@
+fun realChar(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object : Parser<Char, Char> {
+    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> = when (val char = source.next()) {
+        expected -> success(expected)
+        else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString()))
+    }
+}
+
+fun realChar(message: String = "{actual} found, not a regular character") = object : Parser<Char, Char> {
+    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> =
+        source.next()?.let { success(it) } ?: failure(message.replace("{actual}", "{EoF}"))
+}
+
+fun realChar(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = object : Parser<Char, Char> {
+    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Char> =
+        source.next()?.let { char ->
+            if (predicate(char)) success(char)
+            else failure(message.replace("{actual}", char.toString()))
+        } ?: failure(message.replace("{actual}", "{EoF}"))
+
+}
