@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.dokka)
     alias(libs.plugins.publish)
-    id("io.freefair.github.dependency-submission") version "8.13.1"
 
 }
 
