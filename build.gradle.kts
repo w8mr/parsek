@@ -3,18 +3,16 @@ import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.JavadocJar
 
 group = "nl.w8mr.parsek"
-version = "0.1.0"
+version = "0.1.2"
 
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
-    alias(libs.plugins.dokka)
     alias(libs.plugins.publish)
 
 }
 
 val multiplatformId = libs.plugins.kotlinMultiplatform.get().pluginId
-val dokkaId = libs.plugins.dokka.get().pluginId
 val publishId = libs.plugins.publish.get().pluginId
 
 subprojects {
@@ -24,17 +22,16 @@ subprojects {
 
     apply(plugin = publishId)
     apply(plugin = multiplatformId)
-    apply(plugin = dokkaId)
 
     mavenPublishing {
         configure(KotlinMultiplatform(
-            javadocJar = JavadocJar.Dokka("dokkaHtml"),
+            javadocJar = JavadocJar.Empty(),
             sourcesJar = true,
             androidVariantsToPublish = emptyList<String>(),
         ))
         publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-        coordinates("nl.w8mr.parsek", "core", "0.1.1")
+        coordinates("nl.w8mr.parsek", "core", "0.1.2")
 
         pom {
             name.set("Parsek")
