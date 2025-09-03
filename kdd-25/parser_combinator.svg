@@ -1,0 +1,21 @@
+<svg width="900" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+    <rect id="svg_1" x="50" y="50" width="640" height="30" rx="5" fill="white" stroke="black" stroke-width="2"/>
+    <text id="svg_2" x="60" y="70" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="black">Input:</text>
+    <text id="svg_3" x="110" y="70" font-family="monospace" font-size="16" fill="black">"abc"</text>
+    <rect id="svg_4" x="100" y="130" width="550" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/>
+    <text id="svg_5" x="375" y="120" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="black" text-anchor="middle">Sequence Parser</text>
+    <rect id="svg_6" x="120" y="160" width="100" height="40" rx="5" fill="white" stroke="black" stroke-width="2"/>
+    <text id="svg_7" x="170" y="175" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black" text-anchor="middle">Double qoute</text>
+    <text id="svg_8" x="170" y="190" font-family="Arial, sans-serif" font-size="12" fill="gray" text-anchor="middle">Matches: "</text>
+    <rect id="svg_9" x="250" y="150" width="250" height="60" rx="5" fill="white" stroke="black" stroke-width="2"/>
+    <text id="svg_10" x="375" y="145" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="gray" text-anchor="middle">Repeat Parser</text>
+    <rect id="svg_11" x="270" y="160" width="210" height="40" rx="5" fill="white" stroke="black" stroke-width="2"/>
+    <text id="svg_12" x="375" y="175" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black" text-anchor="middle">Char Parser</text>
+    <text id="svg_13" x="375" y="190" font-family="Arial, sans-serif" font-size="12" fill="gray" text-anchor="middle">Matches: any char but "</text>
+    <rect id="svg_14" x="530" y="160" width="100" height="40" rx="5" fill="white" stroke="black" stroke-width="2"/>
+    <text id="svg_15" x="580" y="175" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="black" text-anchor="middle">Double qoute</text>
+    <text id="svg_17" x="580" y="190" font-family="Arial, sans-serif" font-size="12" fill="gray" text-anchor="middle">Matches: "</text>
+    <rect id="svg_18" x="50" y="260" width="640" height="30" rx="5" fill="white" stroke="black" stroke-width="2"/>
+    <text id="svg_19" x="60" y="280" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="black">Result:</text>
+    <text id="svg_20" x="110" y="280" font-family="monospace" font-size="16" fill="black">[", [a, b, c], "]</text>
+</svg>
