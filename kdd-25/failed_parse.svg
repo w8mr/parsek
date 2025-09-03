@@ -1,0 +1,27 @@
+<svg width="420" height="60" xmlns="http://www.w3.org/2000/svg">
+    <!-- Input -->
+    <text x="70" y="25" font-size="16" font-weight="700" text-anchor="middle" fill="#333">Input</text>
+    <text x="70" y="45" font-size="14" text-anchor="middle" fill="#000">"abc"</text>
+    <text x="360" y="25" font-size="16" font-weight="700" text-anchor="middle" fill="#333">Output</text>
+    <text x="360" y="45" font-size="14" text-anchor="middle" fill="#333">(null, "abc")</text>
+
+    <!-- Arrow to parser -->
+    <line x1="100" y1="30" x2="160" y2="30" stroke="#333" marker-end="url(#arrowhead)" />
+
+    <!-- Parser -->
+    <rect x="160" y="10" width="100" height="40" fill="#fff" stroke="#333" rx="2%"/>
+    <text x="210" y="35" font-size="16" font-weight="700" text-anchor="middle" fill="#000">Parser</text>
+
+    <!-- Arrow to output -->
+    <line x1="260" y1="30" x2="320" y2="30" stroke="#333" marker-end="url(#arrowhead)" />
+
+    <!-- Output -->
+
+    <!-- Arrowhead definition -->
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7"
+                refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+        </marker>
+    </defs>
+</svg>
