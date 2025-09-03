@@ -1,0 +1,124 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <style>
+            .format-text {
+            font-family: 'Arial Black', Arial, sans-serif;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            }
+            .xl { font-size: 48px; fill: #8b93a6; }
+            .large { font-size: 36px; fill: #a8a29e; }
+            .medium { font-size: 28px; fill: #9ca3af; }
+            .small { font-size: 20px; fill: #94a3b8; }
+            .tiny { font-size: 16px; fill: #a1a1aa; }
+        </style>
+    </defs>
+
+    <!-- Extra Large - Most Popular (Center focus) -->
+    <text x="400" y="250" class="format-text xl">PDF</text>
+    <text x="320" y="200" class="format-text xl" transform="rotate(90 320 200)">JPG</text>
+    <text x="480" y="220" class="format-text xl">MP4</text>
+    <text x="350" y="280" class="format-text xl" transform="rotate(90 350 280)">DOCX</text>
+    <text x="450" y="300" class="format-text xl">PNG</text>
+
+    <!-- Large - Very Popular (Around center) -->
+    <text x="400" y="180" class="format-text large" transform="rotate(90 400 180)">TXT</text>
+    <text x="520" y="250" class="format-text large">ZIP</text>
+    <text x="280" y="250" class="format-text large">MP3</text>
+    <text x="400" y="320" class="format-text large" transform="rotate(90 400 320)">XLSX</text>
+    <text x="280" y="300" class="format-text large" transform="rotate(90 280 300)">HTML</text>
+    <text x="550" y="250" class="format-text large" transform="rotate(90 550 250)">MOV</text>
+
+    <!-- Medium - Popular (Mid-range from center) -->
+    <text x="520" y="200" class="format-text medium" transform="rotate(90 520 200)">CSS</text>
+    <text x="250" y="180" class="format-text medium">GIF</text>
+    <text x="550" y="280" class="format-text medium">JSON</text>
+    <text x="250" y="320" class="format-text medium" transform="rotate(90 250 320)">XML</text>
+    <text x="450" y="350" class="format-text medium">PPTX</text>
+    <text x="350" y="150" class="format-text medium" transform="rotate(90 350 150)">AVI</text>
+    <text x="520" y="320" class="format-text medium" transform="rotate(90 520 320)">JS</text>
+    <text x="250" y="250" class="format-text medium">WAV</text>
+    <text x="480" y="150" class="format-text medium" transform="rotate(90 480 150)">MKV</text>
+    <text x="320" y="350" class="format-text medium">JPEG</text>
+    <text x="580" y="200" class="format-text medium" transform="rotate(90 580 200)">WEBM</text>
+
+    <!-- Small - Common (Further from center) -->
+    <text x="200" y="200" class="format-text small">BMP</text>
+    <text x="450" y="380" class="format-text small" transform="rotate(90 450 380)">CSV</text>
+    <text x="300" y="380" class="format-text small">SVG</text>
+    <text x="500" y="150" class="format-text small" transform="rotate(90 500 150)">RAR</text>
+    <text x="220" y="280" class="format-text small" transform="rotate(90 220 280)">EXE</text>
+    <text x="350" y="380" class="format-text small">PHP</text>
+    <text x="600" y="280" class="format-text small">DMG</text>
+    <text x="200" y="320" class="format-text small" transform="rotate(90 200 320)">AAC</text>
+    <text x="580" y="320" class="format-text small">M4A</text>
+    <text x="180" y="230" class="format-text small" transform="rotate(90 180 230)">WMV</text>
+    <text x="620" y="220" class="format-text small">FLV</text>
+    <text x="200" y="350" class="format-text small" transform="rotate(90 200 350)">OGV</text>
+    <text x="500" y="380" class="format-text small">3GP</text>
+    <text x="580" y="150" class="format-text small" transform="rotate(90 580 150)">M4V</text>
+    <text x="160" y="200" class="format-text small">ASF</text>
+    <text x="620" y="300" class="format-text small" transform="rotate(90 620 300)">RM</text>
+
+    <!-- Tiny - Less Common (Outer edges, closer to center) -->
+    <text x="300" y="120" class="format-text tiny" transform="rotate(90 300 120)">TIFF</text>
+    <text x="180" y="150" class="format-text tiny">RTF</text>
+    <text x="200" y="320" class="format-text tiny">WEBP</text>
+    <text x="550" y="120" class="format-text tiny">PSD</text>
+    <text x="580" y="320" class="format-text tiny" transform="rotate(90 580 320)">OGG</text>
+    <text x="200" y="320" class="format-text tiny" transform="rotate(90 200 320)">ICO</text>
+    <text x="500" y="380" class="format-text tiny">EPUB</text>
+    <text x="620" y="250" class="format-text tiny" transform="rotate(90 620 250)">TAR</text>
+    <text x="180" y="250" class="format-text tiny">LOG</text>
+    <text x="400" y="120" class="format-text tiny" transform="rotate(90 400 120)">SQL</text>
+    <text x="620" y="300" class="format-text tiny">ISO</text>
+    <text x="180" y="300" class="format-text tiny" transform="rotate(90 180 300)">BAK</text>
+    <text x="140" y="180" class="format-text tiny">FLAC</text>
+    <text x="160" y="300" class="format-text tiny" transform="rotate(90 160 300)">APK</text>
+    <text x="640" y="180" class="format-text tiny">IPA</text>
+    <text x="150" y="250" class="format-text tiny">DEB</text>
+    <text x="650" y="250" class="format-text tiny" transform="rotate(90 650 250)">RPM</text>
+    <text x="140" y="320" class="format-text tiny">MSI</text>
+    <text x="660" y="320" class="format-text tiny">PKG</text>
+    <text x="420" y="100" class="format-text tiny" transform="rotate(90 420 100)">AI</text>
+    <text x="120" y="200" class="format-text tiny">EPS</text>
+    <text x="680" y="200" class="format-text tiny" transform="rotate(90 680 200)">CDR</text>
+    <text x="380" y="100" class="format-text tiny">SKETCH</text>
+    <text x="460" y="100" class="format-text tiny" transform="rotate(90 460 100)">FIG</text>
+    <text x="120" y="280" class="format-text tiny">XD</text>
+    <text x="680" y="280" class="format-text tiny" transform="rotate(90 680 280)">INDD</text>
+    <text x="140" y="350" class="format-text tiny">CAD</text>
+    <text x="660" y="350" class="format-text tiny">DWG</text>
+    <text x="500" y="90" class="format-text tiny" transform="rotate(90 500 90)">DXF</text>
+    <text x="300" y="90" class="format-text tiny">STEP</text>
+    <text x="540" y="90" class="format-text tiny">STL</text>
+    <text x="120" y="350" class="format-text tiny" transform="rotate(90 120 350)">OBJ</text>
+    <text x="680" y="350" class="format-text tiny">PLY</text>
+    <text x="160" y="120" class="format-text tiny" transform="rotate(90 160 120)">BLEND</text>
+    <text x="640" y="120" class="format-text tiny">MAX</text>
+    <text x="120" y="320" class="format-text tiny">C4D</text>
+    <text x="680" y="320" class="format-text tiny" transform="rotate(90 680 320)">FBX</text>
+    <text x="380" y="90" class="format-text tiny" transform="rotate(90 380 90)">GLTF</text>
+    <text x="420" y="90" class="format-text tiny">DAE</text>
+    <text x="140" y="220" class="format-text tiny" transform="rotate(90 140 220)">MIDI</text>
+    <text x="660" y="220" class="format-text tiny">AIFF</text>
+    <text x="120" y="240" class="format-text tiny">AU</text>
+    <text x="680" y="240" class="format-text tiny" transform="rotate(90 680 240)">WMA</text>
+    <text x="160" y="380" class="format-text tiny">M3U</text>
+    <text x="640" y="380" class="format-text tiny" transform="rotate(90 640 380)">PLS</text>
+    <text x="340" y="90" class="format-text tiny" transform="rotate(90 340 90)">XLS</text>
+    <text x="460" y="90" class="format-text tiny">ODS</text>
+    <text x="220" y="90" class="format-text tiny">DOC</text>
+    <text x="260" y="90" class="format-text tiny" transform="rotate(90 260 90)">ODT</text>
+    <text x="620" y="90" class="format-text tiny">PAGES</text>
+    <text x="160" y="160" class="format-text tiny" transform="rotate(90 160 160)">PPT</text>
+    <text x="640" y="160" class="format-text tiny">ODP</text>
+    <text x="140" y="140" class="format-text tiny">KEY</text>
+    <text x="660" y="140" class="format-text tiny" transform="rotate(90 660 140)">VSD</text>
+    <text x="180" y="100" class="format-text tiny">MDB</text>
+    <text x="620" y="100" class="format-text tiny" transform="rotate(90 620 100)">ACCDB</text>
+    <text x="240" y="100" class="format-text tiny" transform="rotate(90 240 100)">SQLITE</text>
+    <text x="560" y="100" class="format-text tiny">DB</text>
+
+</svg>
