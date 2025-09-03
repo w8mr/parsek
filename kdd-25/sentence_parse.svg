@@ -1,0 +1,87 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+    <rect id="svg_1" rx="2%" stroke="#333" fill="#fff" height="30" width="80" y="30" x="260"/>
+    <text id="svg_2" text-anchor="middle" font-size="14" font-family="Arial" y="50" x="300">Sentence</text>
+
+    <line id="svg_3" stroke="black" y2="95" x2="200" y1="60" x1="300"/>
+    <rect id="svg_4" rx="2%" stroke="#333" fill="#fff" height="30" width="100" y="95" x="150"/>
+    <text id="svg_5" text-anchor="middle" font-size="14" font-family="Arial" y="115" x="200">Noun Phrase</text>
+
+    <line id="svg_6" stroke="black" y2="95" x2="400" y1="60" x1="300"/>
+    <rect id="svg_7" rx="2%" stroke="#333" fill="#fff" height="30" width="100" y="95" x="350"/>
+    <text id="svg_8" text-anchor="middle" font-size="14" font-family="Arial" y="115" x="400">Verb Phrase</text>
+
+    <line id="svg_9" stroke="black" y2="160" x2="90" y1="125" x1="200"/>
+    <rect id="svg_0" rx="2%" stroke="#333" fill="#fff" height="30" width="90" y="160" x="45"/>
+    <text id="svg_11" text-anchor="middle" font-size="14" font-family="Arial" y="180" x="90">Determiner</text>
+
+    <line id="svg_18" stroke="black" y2="225" x2="90" y1="190" x1="90"/>
+    <rect id="svg_19" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="225" x="60"/>
+    <text id="svg_20" text-anchor="middle" font-weight="700" font-size="14" font-family="Arial" y="245" x="90">The</text>
+
+    <line id="svg_12" stroke="black" y2="160" x2="175" y1="125" x1="200"/>
+    <rect id="svg_13" rx="2%" stroke="#333" fill="#fff" height="30" width="70" y="160" x="140"/>
+    <text id="svg_14" text-anchor="middle" font-size="14" font-family="Arial" y="180" x="175">Adjective</text>
+
+    <line id="svg_21" stroke="black" y2="225" x2="175" y1="190" x1="175"/>
+    <rect id="svg_22" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="225" x="145"/>
+    <text id="svg_23" text-anchor="middle" font-weight="700" font-size="14" font-family="Arial" y="245" x="175">black</text>
+
+    <line id="svg_15" stroke="black" y2="160" x2="245" y1="125" x1="200"/>
+    <rect id="svg_16" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="160" x="215"/>
+    <text id="svg_17" text-anchor="middle" font-size="14" font-family="Arial" y="180" x="245">Noun</text>
+
+    <line id="svg_24" stroke="black" y2="225" x2="245" y1="190" x1="245"/>
+    <rect id="svg_25" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="225" x="215"/>
+    <text id="svg_26" text-anchor="middle" font-weight="700" font-size="14" font-family="Arial" y="245" x="245">cat</text>
+
+    <line id="svg_27" stroke="black" y2="160" x2="315" y1="125" x1="400"/>
+    <rect id="svg_28" rx="2%" stroke="#333" fill="#fff" height="30" width="70" y="161" x="280"/>
+    <text id="svg_29" text-anchor="middle" font-size="14" font-family="Arial" y="180" x="315">Verb</text>
+
+    <line id="svg_30" stroke="black" y2="225" x2="315" y1="190" x1="315"/>
+    <rect id="svg_31" rx="2%" stroke="#333" fill="#fff" height="30" width="70" y="225" x="280"/>
+    <text id="svg_32" text-anchor="middle" font-weight="700" font-size="14" font-family="Arial" y="245" x="315">climbs</text>
+
+    <line id="svg_27" stroke="black" y2="160" x2="500" y1="125" x1="400"/>
+    <rect id="svg_28" rx="2%" stroke="#333" fill="#fff" height="30" width="140" y="160" x="430"/>
+    <text id="svg_29" text-anchor="middle" font-size="14" font-family="Arial" y="180" x="500">Prepositional Phrase</text>
+
+    <line id="svg_30" stroke="black" y2="225" x2="400" y1="190" x1="500"/>
+    <rect id="svg_31" rx="2%" fill="#fff" height="30" width="90" y="225" x="355" stroke="#333"/>
+    <text id="svg_32" text-anchor="middle" font-size="14" font-family="Arial" y="245" x="400">Preposition</text>
+
+    <line id="svg_30" stroke="black" y2="290" x2="400" y1="255" x1="400"/>
+    <rect id="svg_31" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="290" x="370"/>
+    <text id="svg_32" text-anchor="middle" font-weight="700" font-size="14" font-family="Arial" y="310" x="400">into</text>
+
+
+
+    <line id="svg_3" stroke="black" y2="225" x2="580" y1="190" x1="500"/>
+    <rect id="svg_4" rx="2%" stroke="#333" fill="#fff" height="30" width="100" y="225" x="530"/>
+    <text id="svg_5" text-anchor="middle" font-size="14" font-family="Arial" y="245" x="580">Noun Phrase</text>
+
+
+    <line id="svg_9" stroke="black" y2="310" x2="495" y1="255" x1="580"/>
+    <rect id="svg_10" rx="2%" stroke="#333" fill="#fff" height="30" width="90" y="290" x="450"/>
+    <text id="svg_11" text-anchor="middle" font-size="14" font-family="Arial" y="310" x="495">Determiner</text>
+
+    <line id="svg_18" stroke="black" y2="355" x2="495" y1="320" x1="495"/>
+    <rect id="svg_19" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="355" x="465"/>
+    <text id="svg_20" text-anchor="middle" font-weight="700" font-size="14" font-family="Arial" y="375" x="495">the</text>
+
+    <line id="svg_12" stroke="black" y2="310" x2="580" y1="255" x1="580"/>
+    <rect id="svg_13" rx="2%" stroke="#333" fill="#fff" height="30" width="70" y="290" x="545"/>
+    <text id="svg_14" text-anchor="middle" font-size="14" font-family="Arial" y="310" x="580">Adjective</text>
+
+    <line id="svg_21" stroke="black" y2="355" x2="580" y1="320" x1="580"/>
+    <rect id="svg_22" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="355" x="550"/>
+    <text id="svg_23" text-anchor="middle" font-weight="700" font-size="14" font-family="Arial" y="375" x="580">tall</text>
+
+    <line id="svg_15" stroke="black" y2="310" x2="650" y1="255" x1="580"/>
+    <rect id="svg_16" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="290" x="620"/>
+    <text id="svg_17" text-anchor="middle" font-size="14" font-family="Arial" y="310" x="650">Noun</text>
+
+    <line id="svg_24" stroke="black" y2="355" x2="650" y1="320" x1="650"/>
+    <rect id="svg_25" rx="2%" stroke="#333" fill="#fff" height="30" width="60" y="355" x="620"/>
+    <text id="svg_26" text-anchor="middle" font-weight="700" font-size="14" font-family="Arial" y="375" x="650">tree</text>
+</svg>
