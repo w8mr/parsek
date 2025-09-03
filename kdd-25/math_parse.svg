@@ -1,0 +1,29 @@
+<svg width="500" height="300" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="250" cy="40" r="20" fill="#fff" stroke="#000"/>
+    <text x="250" y="45" font-size="16" text-anchor="middle" fill="#000">-</text>
+
+    <circle cx="150" cy="120" r="20" fill="#fff" stroke="#000"/>
+    <text x="150" y="125" font-size="16" text-anchor="middle" fill="#000">+</text>
+
+    <circle cx="350" cy="120" r="20" fill="#fff" stroke="#000"/>
+    <text x="350" y="125" font-size="16" text-anchor="middle" fill="#000">7</text>
+
+    <circle cx="100" cy="200" r="20" fill="#fff" stroke="#000"/>
+    <text x="100" y="205" font-size="16" text-anchor="middle" fill="#000">3</text>
+
+    <circle cx="200" cy="200" r="20" fill="#fff" stroke="#000"/>
+    <text x="200" y="205" font-size="16" text-anchor="middle" fill="#000">*</text>
+
+    <circle cx="170" cy="260" r="20" fill="#fff" stroke="#000"/>
+    <text x="170" y="265" font-size="16" text-anchor="middle" fill="#000">5</text>
+
+    <circle cx="230" cy="260" r="20" fill="#fff" stroke="#000"/>
+    <text x="230" y="265" font-size="16" text-anchor="middle" fill="#000">3</text>
+
+    <line x1="250" y1="60" x2="150" y2="100" stroke="#000"/>
+    <line x1="250" y1="60" x2="350" y2="100" stroke="#000"/>
+    <line x1="150" y1="140" x2="100" y2="180" stroke="#000"/>
+    <line x1="150" y1="140" x2="200" y2="180" stroke="#000"/>
+    <line x1="200" y1="220" x2="170" y2="240" stroke="#000"/>
+    <line x1="200" y1="220" x2="230" y2="240" stroke="#000"/>
+</svg>
