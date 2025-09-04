@@ -1,7 +1,5 @@
 package nl.w8mr.parsek
 
-import nl.w8mr.parsek.text.literal
-
 fun <Token, R> repeat(
     parser: Parser<Token, R>,
     max: Int = Int.MAX_VALUE,
@@ -81,9 +79,9 @@ fun <Token, R, S> untilLazy(
         }
     }
     while (list.size < max) {
-        val result = stop.bindAsResult()
-        if (result is Parser.Success) {
-            return@combi list.map { it.value } to result.value
+        val resultStop = stop.bindAsResult()
+        if (resultStop is Parser.Success) {
+            return@combi list.map { it.value } to resultStop.value
         }
         when (val result = repeat.bindAsResult()) {
             is Parser.Success -> list.add(result)
@@ -103,14 +101,14 @@ fun <Token, R> untilLazy(
     stop: LiteralParser<Token>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = untilLazy(repeat, stop as Parser<Token, Unit>, max, min).map { (r, u) -> r }
+) = untilLazy(repeat, stop as Parser<Token, Unit>, max, min).map { (r, _) -> r }
 
 fun <Token, R, S> sepByGreedy(
     parser: Parser<Token, R>,
     sep: Parser<Token, S>
 ) = combi<Token, List<R>> {
     val start = parser.bind()
-    val others = zeroOrMore(seq(sep, parser) { s, p -> p }).bind()
+    val others = zeroOrMore(seq(sep, parser) { _, p -> p }).bind()
     listOf(start) + others
 }
 

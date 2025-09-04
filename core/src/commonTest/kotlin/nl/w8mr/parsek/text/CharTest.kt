@@ -30,7 +30,7 @@ class CharTest {
     @JsName("CharMatchesAnyCharacter")
     fun `char matches any character`() {
 // ZIPDOK start any-char-literal
-        val parser = char
+        val parser = anyChar
         parser.parse("★☆") shouldBe "★"
 // ZIPDOK end any-char-literal
     }
@@ -38,7 +38,7 @@ class CharTest {
     @Test
     @JsName("CharDoesntMatchAnyCharacter")
     fun `char doesn't match any character`() {
-        val parser = char
+        val parser = anyChar
         shouldThrowMessage<ParseException>("No more tokens available") {
             parser.parse("")
         }

@@ -3,7 +3,7 @@ import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.JavadocJar
 
 group = "nl.w8mr.parsek"
-version = "0.1.0"
+version = "0.2.1"
 
 
 plugins {
@@ -34,7 +34,7 @@ subprojects {
         ))
         publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-        coordinates("nl.w8mr.parsek", "core", "0.2.0")
+        coordinates("nl.w8mr.parsek", "core", "0.2.1")
 
         pom {
             name.set("Parsek")

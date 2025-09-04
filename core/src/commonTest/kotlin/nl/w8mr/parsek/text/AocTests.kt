@@ -248,7 +248,7 @@ p=9,5 v=-3,-3
                        |""".trimMargin()
 
 
-        val wire = char * 3
+        val wire = anyChar * 3
         val inp = wire and ": " and number and '\n'
         val inputs = some(inp)
         val operation = oneOf("XOR" value Operation.XOR, "AND" value Operation.AND, "OR" value Operation.OR )

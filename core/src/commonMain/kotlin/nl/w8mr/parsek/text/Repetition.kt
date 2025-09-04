@@ -24,7 +24,7 @@ fun untilLazy(
     stop: LiteralParser<Char>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = untilLazy(repeat, stop as Parser<Char, Unit>, max, min).map { (s, u) -> s }
+) = untilLazy(repeat, stop as Parser<Char, Unit>, max, min).map { (s, _) -> s }
 
 infix fun Parser<Char, String>.until(stop: Char) = untilLazy(this, literal(stop))
 

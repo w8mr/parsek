@@ -41,7 +41,7 @@ fun char(message: String = "Character {actual} does not meet predicate", predica
 
 val digit get() = char("Character {actual} is not a digit", Char::isDigit)
 val letter get() = char("Character {actual} is not a letter", Char::isLetter)
-val char get() = char()
+val anyChar get() = char()
 val number get() = some(digit).map { it.joinToString("").toInt() }
 val longNumber get() = some(digit).map { it.joinToString("").toLong() }
 val signedNumber = seq(optional(char('-')), number) { m, n -> if (m == "-") -n else n }
