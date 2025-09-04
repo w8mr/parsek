@@ -20,7 +20,7 @@ import nl.w8mr.parsek.some
  * <!--- ZIPDOK end -->
  */
 fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object : Parser<Char, String> {
-    override fun applyImpl(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> {
+    override fun apply(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> {
         return when (context.hasNext()) {
             true -> {
                 val (char, new) = context.token()
@@ -38,7 +38,7 @@ fun char(expected: Char, message: String = "Character {actual} does not meet exp
 }
 
 fun char(message: String = "{actual} found, not a regular character") = object : Parser<Char, String> {
-    override fun applyImpl(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> =
+    override fun apply(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> =
         when (context.hasNext()) {
             true -> {
                 val (char, new) = context.token()
@@ -50,7 +50,7 @@ fun char(message: String = "{actual} found, not a regular character") = object :
 }
 
 fun char(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = object : Parser<Char, String> {
-    override fun applyImpl(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> =
+    override fun apply(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> =
         when (context.hasNext()) {
             true -> {
                 val (char, new) = context.token()

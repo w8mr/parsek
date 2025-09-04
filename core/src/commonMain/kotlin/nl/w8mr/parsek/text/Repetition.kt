@@ -7,8 +7,8 @@ fun <Token> repeat(
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
 ) = object: Parser<Token, String> {
-    override fun applyImpl(context: Context<Token>): Pair<Parser.Result<String>, Context<Token>> {
-        val (result, new) = nl.w8mr.parsek.repeat(parser, max, min).applyImpl(context)
+    override fun apply(context: Context<Token>): Pair<Parser.Result<String>, Context<Token>> {
+        val (result, new) = nl.w8mr.parsek.repeat(parser, max, min).apply(context)
         return when (result) {
             is Parser.Success -> success(result.value.joinToString(""), result.subResults) to new
             is Parser.Failure -> failure(result.error, result.subResults) to context
@@ -22,8 +22,8 @@ fun <S> untilLazy(
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
 ) = object: Parser<Char, Pair<String, S>> {
-    override fun applyImpl(context: Context<Char>): Pair<Parser.Result<Pair<String, S>>, Context<Char>> {
-        val (result, new) = nl.w8mr.parsek.untilLazy(repeat, stop, max, min).applyImpl(context)
+    override fun apply(context: Context<Char>): Pair<Parser.Result<Pair<String, S>>, Context<Char>> {
+        val (result, new) = nl.w8mr.parsek.untilLazy(repeat, stop, max, min).apply(context)
         return when (result) {
             is Parser.Success -> success(result.value.first.joinToString("") to result.value.second, result.subResults) to new
             is Parser.Failure -> failure(result.error, result.subResults) to context

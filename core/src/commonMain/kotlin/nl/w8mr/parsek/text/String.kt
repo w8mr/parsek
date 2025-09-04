@@ -15,7 +15,7 @@ import nl.w8mr.parsek.Parser
  * <!--- ZIPDOK end -->
  */
 fun  string(expected: String, message: String = "Character {actual} does not meet expected {expected}, partial match: {partial}") = object : Parser<Char, String> {
-    override fun applyImpl(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> {
+    override fun apply(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> {
         var matched = mutableListOf<Char>()
         var current = context
         for (expectedChar in expected) {

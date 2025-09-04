@@ -6,7 +6,7 @@ interface LiteralParser<Token> : Parser<Token, Unit>
 
 fun <Token, R : Any> literal(kClass: KClass<R>) =
     object : LiteralParser<Token> {
-        override fun applyImpl(context: Context<Token>): Pair<Parser.Result<Unit>, Context<Token>> {
+        override fun apply(context: Context<Token>): Pair<Parser.Result<Unit>, Context<Token>> {
             val (token, new) = context.token()
             return when (kClass.isInstance(token)) {
                 false -> {

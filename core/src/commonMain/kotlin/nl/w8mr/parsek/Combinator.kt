@@ -6,7 +6,7 @@ class ParseInteruptedException(override val message: String):
     CancellationException("kotlin.coroutines.cancellation.CancellationException should never get swallowed. Always re-throw it if captured.")
 
 fun <Token, R> combi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, R>.() -> R) = object : Parser<Token, R> {
-    override fun applyImpl(context: Context<Token>): Pair<Parser.Result<R>, Context<Token>> = doApply(
+    override fun apply(context: Context<Token>): Pair<Parser.Result<R>, Context<Token>> = doApply(
         context,
         block,
         message
@@ -14,7 +14,7 @@ fun <Token, R> combi(message: String = "Combinator failed, parser number {index}
 }
 
 fun <Token> literalCombi(message: String = "Combinator failed, parser number {index} with error: {error}", block: CombinatorDSL<Token, Unit>.() -> Unit) = object : LiteralParser<Token> {
-    override fun applyImpl(context: Context<Token>): Pair<Parser.Result<Unit>, Context<Token>> = doApply(
+    override fun apply(context: Context<Token>): Pair<Parser.Result<Unit>, Context<Token>> = doApply(
         context,
         block,
         message
