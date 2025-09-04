@@ -39,10 +39,10 @@ class OneOfTest {
         full.first shouldBe null
         full.second shouldBe Parser.Failure("None of the parsers matches",
             listOf(
-                Parser.Failure<List<Char>>("Repeat only 0 elements found, needed at least 1",
-                    listOf(Parser.Failure<Char>("Character ★ is not a digit"))),
-                Parser.Failure<List<Char>>("Repeat only 0 elements found, needed at least 1",
-                    listOf(Parser.Failure<Char>("Character ★ is not a letter"))),
+                Parser.Failure("Repeat only 0 elements found, needed at least 1",
+                    listOf(Parser.Failure("Character ★ is not a digit"))),
+                Parser.Failure("Repeat only 0 elements found, needed at least 1",
+                    listOf(Parser.Failure("Character ★ is not a letter"))),
             )
         )
     }
@@ -73,8 +73,8 @@ class OneOfTest {
         full.first shouldBe "abc"
         full.second shouldBe Parser.Success("abc",
             listOf(
-                Parser.Failure<String>("Repeat only 0 elements found, needed at least 1", listOf(
-                    Parser.Failure<Char>("Character a is not a digit"))),
+                Parser.Failure("Repeat only 0 elements found, needed at least 1", listOf(
+                    Parser.Failure("Character a is not a digit"))),
                 Parser.Success<String>("abc", listOf(
                     Parser.Success("a"),
                     Parser.Success("b"),

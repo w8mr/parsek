@@ -6,23 +6,17 @@ fun <Token> repeat(
     parser: Parser<Token, String>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = object: Parser<Token, String> {
-    override fun applyImpl(source: ParserSource<Token>) = when (val result = nl.w8mr.parsek.repeat(parser, max, min).applyImpl(source)) {
-            is Parser.Success -> success(result.value.joinToString(""), result.subResults)
-            is Parser.Failure -> failure(result.message, result.subResults)
-        }
-    }
+) = direct <Token, String> {
+    nl.w8mr.parsek.repeat(parser, max, min).bindAsResult().map { it.joinToString("") }
+}
 
 fun <S> untilLazy(
     repeat: Parser<Char, String>,
     stop: Parser<Char, S>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = object: Parser<Char, Pair<String, S>> {
-    override fun applyImpl(source: ParserSource<Char>) = when (val result = nl.w8mr.parsek.untilLazy(repeat, stop, max, min).applyImpl(source)) {
-        is Parser.Success -> success(result.value.first.joinToString("") to result.value.second, result.subResults)
-        is Parser.Failure -> failure(result.message, result.subResults)
-    }
+) = direct {
+        nl.w8mr.parsek.untilLazy(repeat, stop, max, min).bindAsResult().map { it.first.joinToString("") to it.second }
 }
 
 fun untilLazy(

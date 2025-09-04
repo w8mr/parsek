@@ -1,10 +1,11 @@
 package nl.w8mr.parsek.text
 
-import nl.w8mr.parsek.ParserSource
+import nl.w8mr.parsek.Context
 import nl.w8mr.parsek.Parser
 import nl.w8mr.parsek.map
 import nl.w8mr.parsek.optional
 import nl.w8mr.parsek.seq
+import nl.w8mr.parsek.simple
 import nl.w8mr.parsek.some
 
 /**
@@ -19,25 +20,23 @@ import nl.w8mr.parsek.some
  *  ```
  * <!--- ZIPDOK end -->
  */
-fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object : Parser<Char, String> {
-    override fun applyImpl(source: ParserSource<Char>): Parser.Result<String> = when (val char = source.next()) {
-        expected -> success(expected.toString())
-        else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString()))
+fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = simple<Char, String> {
+    when (val ch = token()) {
+        expected -> ch.toString()
+        else -> fail(message.replace("{actual}", ch.toString()).replace("{expected}", expected.toString()))
     }
 }
 
-fun char(message: String = "{actual} found, not a regular character") = object : Parser<Char, String> {
-    override fun applyImpl(source: ParserSource<Char>): Parser.Result<String> =
-        source.next()?.let { success(it.toString()) } ?: failure(message.replace("{actual}", "{EoF}"))
+fun char() = simple<Char, String> {
+    token().toString()
 }
 
-fun char(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = object : Parser<Char, String> {
-    override fun applyImpl(source: ParserSource<Char>): Parser.Result<String> =
-        source.next()?.let { char ->
-            if (predicate(char)) success(char.toString())
-            else failure(message.replace("{actual}", char.toString()))
-        } ?: failure(message.replace("{actual}", "{EoF}"))
-
+fun char(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = simple<Char, String> {
+    val ch = token()
+    when {
+        predicate(ch) -> ch.toString()
+        else -> fail(message.replace("{actual}", ch.toString()))
+    }
 }
 
 val digit get() = char("Character {actual} is not a digit", Char::isDigit)

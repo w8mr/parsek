@@ -1,15 +1,16 @@
 package nl.w8mr.parsek.text
 
+import nl.w8mr.parsek.Context
 import nl.w8mr.parsek.LiteralParser
 import nl.w8mr.parsek.Parser
-import nl.w8mr.parsek.ParserSource
+import nl.w8mr.parsek.simple
+import nl.w8mr.parsek.simpleLiteral
 import nl.w8mr.parsek.value
 
-fun literal(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object :
-    LiteralParser<Char> {
-    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Unit> = when (val char = source.next()) {
-        expected -> success(Unit)
-        else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString()))
+fun literal(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = simpleLiteral<Char> {
+    when (val ch = token()) {
+        expected -> Unit
+        else -> fail(message.replace("{actual}", ch.toString()).replace("{expected}", expected.toString()))
     }
 }
 
@@ -24,24 +25,23 @@ fun literal(expected: Char, message: String = "Character {actual} does not meet 
  *  ```
  * <!--- ZIPDOK end -->
  */
-fun literal(expected: String, message: String = "Character {actual} does not meet expected {expected}, partial match: {partial}") = object : LiteralParser<Char> {
-    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Unit> {
-        var matched = mutableListOf<Char>()
-        val mark = source.mark()
-        for (expectedChar in expected) {
-            when (val char = source.next()) {
-                expectedChar -> matched += char
-                else -> {
-                    source.reset(mark)
-                    return when {
-                        matched.isEmpty() -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expectedChar.toString()).replace("{partial}", "<None>"))
-                        else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expectedChar.toString()).replace("{partial}", matched.joinToString("")))
-                    }
-                }
+fun literal(expected: String, message: String = "Character {actual} does not meet expected {expected}, partial match: {partial}") = simpleLiteral<Char> {
+    var matched = mutableListOf<Char>()
+    for (expectedChar in expected) {
+        val ch = token()
+        when (ch) {
+            expectedChar -> matched += ch
+            else -> when {
+                matched.isEmpty() -> fail(message
+                    .replace("{actual}", ch.toString())
+                    .replace("{expected}", expectedChar.toString())
+                    .replace("{partial}", "<None>"))
+                else -> fail(message
+                    .replace("{actual}", ch.toString())
+                    .replace("{expected}", expectedChar.toString())
+                    .replace("{partial}", matched.joinToString("")))
             }
         }
-        source.release(mark)
-        return success(Unit)
     }
 }
 

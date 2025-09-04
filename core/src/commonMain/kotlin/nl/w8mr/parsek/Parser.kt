@@ -1,46 +1,31 @@
 package nl.w8mr.parsek
 
-import nl.w8mr.parsek.text.CharSequenceSource
 import kotlin.reflect.KClass
 
-
 interface Parser<Token, R> {
-    sealed class Result<R>(open val subResults: List<Result<*>> = emptyList())
+
+    sealed class Result<out R>(open val subResults: List<Result<*>> = emptyList())
 
     data class Success<R>(val value: R, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
 
-    data class Failure<R>(val message: String, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
+    data class Failure(val error: Any, override val subResults: List<Result<*>> = emptyList()) : Result<Nothing>(subResults)
 
-    fun apply(source: ParserSource<Token>): Result<R> {
-        val mark = source.mark()
-        return when (val result = applyImpl(source)) {
-            is Success -> {
-                source.release(mark)
-                result
-            }
-            is Failure -> {
-                source.reset(mark)
-                result
-            }
-        }
-    }
-
-    fun applyImpl(source: ParserSource<Token>): Result<R>
+    fun apply(context: Context<Token>): Pair<Result<R>, Context<Token>>
 
     fun success(value: R, subResults: List<Result<*>> = emptyList()) = Success(value, subResults)
-    fun failure(message: String, subResults: List<Result<*>> = emptyList()) = Failure<R>(message, subResults)
+    fun failure(error: Any, subResults: List<Result<*>> = emptyList()) = Failure(error, subResults)
 
-    fun parse(source: ParserSource<Token>): R {
-        return apply(source).let { result ->
+    fun parse(context: Context<Token>): R {
+        return apply(context).let { (result, new) ->
             when (result) {
                 is Success -> result.value
-                is Failure -> throw ParseException(result.message, result)
+                is Failure -> throw ParseException(result.error.toString(), result)
             }
         }
     }
 
-    fun parseTree(source: ParserSource<Token>): Pair<R?, Result<R>> {
-        return apply(source).let { result ->
+    fun parseTree(context: Context<Token>): Pair<R?, Parser.Result<R>> {
+        return apply(context).let { (result, new) ->
             when (result) {
                 is Success -> result.value to result
                 is Failure -> null to result
@@ -51,63 +36,27 @@ interface Parser<Token, R> {
 }
 
 fun <Token, R> Parser<Token, R>.fold(
-    iterator: ParserSource<Token>,
+    context: Context<Token>,
     success: ((R, List<Parser.Result<*>>) -> Parser.Result<R>)? = null,
-    failed: ((String, List<Parser.Result<*>>)-> Parser.Result<R>)? = null
-) = when(val result = apply(iterator)) {
-    is Parser.Success -> if (success==null) result else success(result.value, result.subResults)
-    is Parser.Failure -> if (failed==null) result else failed(result.message, result.subResults)
-}
-
-interface ParserSource<Token> {
-    fun next(): Token?
-    fun hasNext(): Boolean
-    var index: Int
-
-    fun mark() : Int
-    fun reset(mark: Int)
-    fun release(mark: Int)
-
-    val state: MutableMap<String, Any>
-
-
-}
-
-class ListSource<Token>(val input: List<Token>): ParserSource<Token> {
-    override var index = 0
-    override fun mark(): Int = index
-    override fun reset(mark: Int) { index = mark }
-    override fun release(mark: Int) = Unit
-    override val state: MutableMap<String, Any> get() = mutableMapOf()
-
-//    override fun peek(): kotlin.Char? = if (hasNext()) input[index] else null
-
-    override fun next(): Token? = if (hasNext()) input[index++] else null
-
-    override fun hasNext(): Boolean = index < input.size
+    failed: ((Any, List<Parser.Result<*>>) -> Parser.Result<R>)? = null
+): Parser.Result<R> {
+    val (result, new) = apply(context)
+    return when (result) {
+        is Parser.Success -> if (success == null) result else success(result.value, result.subResults)
+        is Parser.Failure -> if (failed == null) result else failed(result.error, result.subResults)
+    }
 }
 
 fun <Token, R> Parser<Token, R>.parse(input: List<Token>) =
-    this.parse(ListSource(input))
+    this.parse(ListContext(input))
 
-fun <Token, R : Any> token(kClass: KClass<R>) =
-    object : Parser<Token, R> {
-        override fun applyImpl(source: ParserSource<Token>): Parser.Result<R> {
-            val mark = source.mark()
-            val match = source.next()
-            return when (kClass.isInstance(match)) {
-                false -> {
-                    source.reset(mark)
-                    failure("token is not instance of ${kClass.simpleName}")
-                }
-
-                true -> {
-                    source.release(mark)
-                    success(match as R)
-                }
-            }
-        }
+fun <Token: Any, R : Token> token(kClass: KClass<R>) = simple<Token, R> {
+    val token = token()
+    when {
+        kClass.isInstance(token) -> token as R
+        else -> fail("token is not instance of ${kClass.simpleName}")
     }
+}
 
 
 
