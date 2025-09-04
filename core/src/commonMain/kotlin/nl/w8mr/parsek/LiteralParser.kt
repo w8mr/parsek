@@ -6,17 +6,15 @@ interface LiteralParser<Token> : Parser<Token, Unit>
 
 fun <Token, R : Any> literal(kClass: KClass<R>) =
     object : LiteralParser<Token> {
-        override fun applyImpl(source: ParserSource<Token>): Parser.Result<Unit> {
-            val mark = source.mark()
-            return when (kClass.isInstance(source.next())) {
+        override fun applyImpl(context: Context<Token>): Pair<Parser.Result<Unit>, Context<Token>> {
+            val (token, new) = context.token()
+            return when (kClass.isInstance(token)) {
                 false -> {
-                    source.reset(mark)
-                    failure("token is not instance of ${kClass.simpleName}")
+                    failure("token is not instance of ${kClass.simpleName}") to context
                 }
 
                 true -> {
-                    source.release(mark)
-                    success(Unit)
+                    success(Unit) to new
                 }
             }
         }

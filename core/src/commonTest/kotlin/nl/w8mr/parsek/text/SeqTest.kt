@@ -1,5 +1,7 @@
 package nl.w8mr.parsek.text
 
+import nl.w8mr.parsek.text.parse
+
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
 import kotlin.test.Test

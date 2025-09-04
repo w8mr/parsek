@@ -1,15 +1,28 @@
 package nl.w8mr.parsek.text
 
+import nl.w8mr.parsek.Context
 import nl.w8mr.parsek.LiteralParser
 import nl.w8mr.parsek.Parser
-import nl.w8mr.parsek.ParserSource
 import nl.w8mr.parsek.value
 
 fun literal(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object :
     LiteralParser<Char> {
-    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Unit> = when (val char = source.next()) {
-        expected -> success(Unit)
-        else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString()))
+    override fun applyImpl(context: Context<Char>): Pair<Parser.Result<Unit>, Context<Char>> {
+        return when (context.hasNext()) {
+            true -> {
+                val (char, new) = context.token()
+                when (char) {
+                    expected -> success(Unit) to new
+                    else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString())) to context
+                }
+            }
+            false -> {
+                failure(
+                    message.replace("{actual}", "{EoF}").replace("{expected}", expected.toString())) to context
+            }
+        }
+
+
     }
 }
 
@@ -25,23 +38,38 @@ fun literal(expected: Char, message: String = "Character {actual} does not meet 
  * <!--- ZIPDOK end -->
  */
 fun literal(expected: String, message: String = "Character {actual} does not meet expected {expected}, partial match: {partial}") = object : LiteralParser<Char> {
-    override fun applyImpl(source: ParserSource<Char>): Parser.Result<Unit> {
+    override fun applyImpl(context: Context<Char>): Pair<Parser.Result<Unit>, Context<Char>> {
         var matched = mutableListOf<Char>()
-        val mark = source.mark()
+        var current = context
         for (expectedChar in expected) {
-            when (val char = source.next()) {
-                expectedChar -> matched += char
-                else -> {
-                    source.reset(mark)
-                    return when {
-                        matched.isEmpty() -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expectedChar.toString()).replace("{partial}", "<None>"))
-                        else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expectedChar.toString()).replace("{partial}", matched.joinToString("")))
+            when (current.hasNext()) {
+                true -> {
+                    val (char, new) = current.token()
+                    when (char) {
+                        expectedChar -> {
+                            current = new
+                            matched += char
+                        }
+                        else -> {
+                            return when {
+                                matched.isEmpty() -> failure(
+                                    message.replace("{actual}", char.toString())
+                                        .replace("{expected}", expectedChar.toString()).replace("{partial}", "<None>")
+                                ) to context
+
+                                else -> failure(
+                                    message.replace("{actual}", char.toString())
+                                        .replace("{expected}", expectedChar.toString())
+                                        .replace("{partial}", matched.joinToString(""))
+                                ) to context
+                            }
+                        }
                     }
                 }
+                false -> failure(message.replace("{actual}", "{EoF}")) to context
             }
         }
-        source.release(mark)
-        return success(Unit)
+        return success(Unit) to current
     }
 }
 

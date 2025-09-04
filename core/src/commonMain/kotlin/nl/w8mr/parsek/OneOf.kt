@@ -1,6 +1,6 @@
 package nl.w8mr.parsek
 
-fun <Token, R> oneOf(vararg parsers: Parser<Token, out R>) = combi("{error}") {
+fun <Token, R> oneOf(vararg parsers: Parser<Token, out R>) = combi<Token, R>("{error}") {
     for (parser in parsers) {
         val result = parser.bindAsResult()
         if (result is Parser.Success) {
@@ -10,7 +10,7 @@ fun <Token, R> oneOf(vararg parsers: Parser<Token, out R>) = combi("{error}") {
     fail("None of the parsers matches")
 }
 
-fun <Token> oneOf(vararg parsers: LiteralParser<Token>) = literalCombi("{error}") {
+fun <Token> oneOf(vararg parsers: LiteralParser<Token>) = literalCombi<Token>("{error}") {
     for (parser in parsers) {
         val result = parser.bindAsResult()
         if (result is Parser.Success) {

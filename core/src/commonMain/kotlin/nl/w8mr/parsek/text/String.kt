@@ -1,7 +1,7 @@
 package nl.w8mr.parsek.text
 
+import nl.w8mr.parsek.Context
 import nl.w8mr.parsek.Parser
-import nl.w8mr.parsek.ParserSource
 
 /**
  *  Matches on the [expected] string and failes with [message] if it succeeds the string is returned
@@ -14,24 +14,39 @@ import nl.w8mr.parsek.ParserSource
  *  ```
  * <!--- ZIPDOK end -->
  */
-fun string(expected: String, message: String = "Character {actual} does not meet expected {expected}, partial match: {partial}") = object : Parser<Char, String> {
-    override fun applyImpl(source: ParserSource<Char>): Parser.Result<String> {
+fun  string(expected: String, message: String = "Character {actual} does not meet expected {expected}, partial match: {partial}") = object : Parser<Char, String> {
+    override fun applyImpl(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> {
         var matched = mutableListOf<Char>()
-        val mark = source.mark()
+        var current = context
         for (expectedChar in expected) {
-            when (val char = source.next()) {
-                expectedChar -> matched += char
-                else -> {
-                    source.reset(mark)
-                    return when {
-                        matched.isEmpty() -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expectedChar.toString()).replace("{partial}", "<None>"))
-                        else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expectedChar.toString()).replace("{partial}", matched.joinToString("")))
+            when (current.hasNext()) {
+                true -> {
+                    val (char, new) = current.token()
+                    when (char) {
+                        expectedChar -> {
+                            current = new
+                            matched += char
+                        }
+                        else -> {
+                            return when {
+                                matched.isEmpty() -> failure(
+                                    message.replace("{actual}", char.toString())
+                                        .replace("{expected}", expectedChar.toString()).replace("{partial}", "<None>")
+                                ) to context
+
+                                else -> failure(
+                                    message.replace("{actual}", char.toString())
+                                        .replace("{expected}", expectedChar.toString())
+                                        .replace("{partial}", matched.joinToString(""))
+                                ) to context
+                            }
+                        }
                     }
                 }
+                false -> failure(message.replace("{actual}", "{EoF}")) to context
             }
         }
-        source.release(mark)
-        return success(matched.joinToString(""))
+        return success(matched.joinToString("")) to current
     }
 }
 

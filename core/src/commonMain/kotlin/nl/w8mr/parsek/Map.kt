@@ -11,8 +11,10 @@ infix fun <Token, R1, R2, R3, S> Parser<Token, Pair<Pair<R1, R2>, R3>>.map(func:
 infix fun <Token, R1, R2, R3, R4, S> Parser<Token, Pair<Pair<Pair<R1, R2>, R3>, R4>>.map(func: (R1, R2, R3, R4) -> (S)) = map("{error}") { func(it.first.first.first, it.first.first.second, it.first.second, it.second) }
 
 //TODO: change to using parser function
-fun <Token, R> Parser<Token, R>.asLiteral(message: String = "{error}") = literalCombi {
-    -this@asLiteral
+fun <Token, R> Parser<Token, R>.asLiteral(message: String = "{error}") = this.let {
+    literalCombi<Token> {
+        it.bind()
+    }
 }
 
 fun <Token, R, S> Parser<Token, R>.mapResult(message: String = "{error}", func: (Parser.Result<R>) -> (Parser.Result<S>)) = combi<Token, S>(message) {

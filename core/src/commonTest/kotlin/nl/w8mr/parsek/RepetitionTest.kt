@@ -55,7 +55,7 @@ class RepetitionTest {
             Parser.Success("a"),
             Parser.Success("b"),
             Parser.Success("c"),
-            Parser.Failure<Char>("Character 1 is not a letter")
+            Parser.Failure("Character 1 is not a letter")
         ))
     }
 

@@ -98,7 +98,7 @@ fun <Token, R, S> untilLazy(
     }
 }
 
-fun <R, Token> untilLazy(
+fun <Token, R> untilLazy(
     repeat: Parser<Token, R>,
     stop: LiteralParser<Token>,
     max: Int = Int.MAX_VALUE,
@@ -108,16 +108,16 @@ fun <R, Token> untilLazy(
 fun <Token, R, S> sepByGreedy(
     parser: Parser<Token, R>,
     sep: Parser<Token, S>
-) = combi {
-    val start = -parser
-    val others = -zeroOrMore(seq(sep, parser) { _, p -> p })
+) = combi<Token, List<R>> {
+    val start = parser.bind()
+    val others = zeroOrMore(seq(sep, parser) { s, p -> p }).bind()
     listOf(start) + others
 }
 
 fun <Token, R, S> sepByGreedyAllowEmpty(
     parser: Parser<Token, R>,
     sep: Parser<Token, S>
-) = combi {
+) = combi<Token, List<R>> {
     val start = when (val first = parser.bindAsResult()) {
         is Parser.Success -> first.value
         is Parser.Failure -> return@combi emptyList()
@@ -127,5 +127,5 @@ fun <Token, R, S> sepByGreedyAllowEmpty(
 }
 
 
-infix fun <R, S, Token> Parser<Token, R>.sepBy(other: Parser<Token, S>) = sepByGreedy(this, other)
-infix fun <R, S, Token> Parser<Token, R>.sepByAllowEmpty(other: Parser<Token, S>) = sepByGreedyAllowEmpty(this, other)
+infix fun <Token, R, S> Parser<Token, R>.sepBy(other: Parser<Token, S>) = sepByGreedy(this, other)
+infix fun <Token, R, S, > Parser<Token, R>.sepByAllowEmpty(other: Parser<Token, S>) = sepByGreedyAllowEmpty(this, other)
