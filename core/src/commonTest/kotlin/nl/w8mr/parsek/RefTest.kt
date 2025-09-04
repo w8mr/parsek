@@ -31,7 +31,7 @@ class RefTest {
         holder.group.parse("(())") shouldBe Group(listOf(Group(emptyList())))
         holder.group.parse("(()())") shouldBe Group(listOf(Group(emptyList()),Group(emptyList())))
         holder.group.parse("(()(()))") shouldBe Group(listOf(Group(emptyList()),Group(listOf(Group(emptyList())))))
-        shouldThrowMessage<ParseException>("Combinator failed, parser number 3 with error: Character {EoF} does not meet expected )") {
+        shouldThrowMessage<ParseException>("Combinator failed, parser number 3 with error: No more tokens available") {
             holder.group.parse("(()(())")
         }
 

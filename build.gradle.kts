@@ -34,7 +34,7 @@ subprojects {
         ))
         publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-        coordinates("nl.w8mr.parsek", "core", "0.1.1")
+        coordinates("nl.w8mr.parsek", "core", "0.2.0")
 
         pom {
             name.set("Parsek")

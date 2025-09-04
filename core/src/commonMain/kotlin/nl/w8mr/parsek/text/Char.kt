@@ -5,6 +5,7 @@ import nl.w8mr.parsek.Parser
 import nl.w8mr.parsek.map
 import nl.w8mr.parsek.optional
 import nl.w8mr.parsek.seq
+import nl.w8mr.parsek.simple
 import nl.w8mr.parsek.some
 
 /**
@@ -19,48 +20,23 @@ import nl.w8mr.parsek.some
  *  ```
  * <!--- ZIPDOK end -->
  */
-fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = object : Parser<Char, String> {
-    override fun apply(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> {
-        return when (context.hasNext()) {
-            true -> {
-                val (char, new) = context.token()
-                when (char) {
-                    expected -> success(expected.toString()) to new
-                    else -> failure(message.replace("{actual}", char.toString()).replace("{expected}", expected.toString())) to context
-                }
-            }
-            false -> {
-                failure(
-                    message.replace("{actual}", "{EoF}").replace("{expected}", expected.toString())) to context
-            }
-        }
+fun char(expected: Char, message: String = "Character {actual} does not meet expected {expected}") = simple<Char, String> {
+    when (val ch = token()) {
+        expected -> ch.toString()
+        else -> fail(message.replace("{actual}", ch.toString()).replace("{expected}", expected.toString()))
     }
 }
 
-fun char(message: String = "{actual} found, not a regular character") = object : Parser<Char, String> {
-    override fun apply(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> =
-        when (context.hasNext()) {
-            true -> {
-                val (char, new) = context.token()
-                success(char.toString()) to new
-
-            }
-            false -> failure(message.replace("{actual}", "{EoF}")) to context
-        }
+fun char() = simple<Char, String> {
+    token().toString()
 }
 
-fun char(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = object : Parser<Char, String> {
-    override fun apply(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> =
-        when (context.hasNext()) {
-            true -> {
-                val (char, new) = context.token()
-                when (predicate(char)) {
-                    true -> success(char.toString()) to new
-                    false -> failure(message.replace("{actual}", char.toString())) to context
-                }
-            }
-            false -> failure(message.replace("{actual}", "{EoF}")) to context
-        }
+fun char(message: String = "Character {actual} does not meet predicate", predicate: (Char) -> Boolean) = simple<Char, String> {
+    val ch = token()
+    when {
+        predicate(ch) -> ch.toString()
+        else -> fail(message.replace("{actual}", ch.toString()))
+    }
 }
 
 val digit get() = char("Character {actual} is not a digit", Char::isDigit)

@@ -1,14 +1,14 @@
 package nl.w8mr.parsek
 
 
-fun <Token, R, S> Parser<Token, R>.map(message: String, func: (R) -> (S)) = combi<Token, S>(message) {
-    func(-this@map)
+private fun <Token, R, S> Parser<Token, R>._map(func: (R) -> (S)) = direct<Token, S> {
+    this@_map.bindAsResult().map(func)
 }
 
-infix fun <Token, R, S> Parser<Token, R>.map(func: (R) -> (S)) = map("{error}", func)
-infix fun <Token, R1, R2, S> Parser<Token, Pair<R1, R2>>.map(func: (R1, R2) -> (S)) = map("{error}") { func(it.first, it.second) }
-infix fun <Token, R1, R2, R3, S> Parser<Token, Pair<Pair<R1, R2>, R3>>.map(func: (R1, R2, R3) -> (S)) = map("{error}") { func(it.first.first, it.first.second, it.second) }
-infix fun <Token, R1, R2, R3, R4, S> Parser<Token, Pair<Pair<Pair<R1, R2>, R3>, R4>>.map(func: (R1, R2, R3, R4) -> (S)) = map("{error}") { func(it.first.first.first, it.first.first.second, it.first.second, it.second) }
+infix fun <Token, R, S> Parser<Token, R>.map(func: (R) -> (S)) = _map(func)
+infix fun <Token, R1, R2, S> Parser<Token, Pair<R1, R2>>.map(func: (R1, R2) -> (S)) = _map { func(it.first, it.second) }
+infix fun <Token, R1, R2, R3, S> Parser<Token, Pair<Pair<R1, R2>, R3>>.map(func: (R1, R2, R3) -> (S)) = _map { func(it.first.first, it.first.second, it.second) }
+infix fun <Token, R1, R2, R3, R4, S> Parser<Token, Pair<Pair<Pair<R1, R2>, R3>, R4>>.map(func: (R1, R2, R3, R4) -> (S)) = _map { func(it.first.first.first, it.first.first.second, it.first.second, it.second) }
 
 //TODO: change to using parser function
 fun <Token, R> Parser<Token, R>.asLiteral(message: String = "{error}") = this.let {
@@ -36,4 +36,3 @@ infix fun <Token> LiteralParser<Token>.effect(func: () -> Unit) = literalCombi<T
     this@effect.bind()
     func()
 }
-

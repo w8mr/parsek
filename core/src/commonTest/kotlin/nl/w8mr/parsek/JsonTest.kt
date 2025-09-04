@@ -80,7 +80,7 @@ class JsonTest {
             "o" to mapOf("s" to "string"),
             "oe" to emptyMap<String, String>(),
             "a" to listOf("string"),
-            "ae" to emptyList<String>(),
+            "ae" to emptyList<Nothing>(),
             "t" to true,
             "f" to false,
             "n" to null,

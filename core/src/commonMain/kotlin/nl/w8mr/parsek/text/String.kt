@@ -2,6 +2,8 @@ package nl.w8mr.parsek.text
 
 import nl.w8mr.parsek.Context
 import nl.w8mr.parsek.Parser
+import nl.w8mr.parsek.simple
+import nl.w8mr.parsek.simpleLiteral
 
 /**
  *  Matches on the [expected] string and failes with [message] if it succeeds the string is returned
@@ -14,40 +16,25 @@ import nl.w8mr.parsek.Parser
  *  ```
  * <!--- ZIPDOK end -->
  */
-fun  string(expected: String, message: String = "Character {actual} does not meet expected {expected}, partial match: {partial}") = object : Parser<Char, String> {
-    override fun apply(context: Context<Char>): Pair<Parser.Result<String>, Context<Char>> {
-        var matched = mutableListOf<Char>()
-        var current = context
-        for (expectedChar in expected) {
-            when (current.hasNext()) {
-                true -> {
-                    val (char, new) = current.token()
-                    when (char) {
-                        expectedChar -> {
-                            current = new
-                            matched += char
-                        }
-                        else -> {
-                            return when {
-                                matched.isEmpty() -> failure(
-                                    message.replace("{actual}", char.toString())
-                                        .replace("{expected}", expectedChar.toString()).replace("{partial}", "<None>")
-                                ) to context
-
-                                else -> failure(
-                                    message.replace("{actual}", char.toString())
-                                        .replace("{expected}", expectedChar.toString())
-                                        .replace("{partial}", matched.joinToString(""))
-                                ) to context
-                            }
-                        }
-                    }
-                }
-                false -> failure(message.replace("{actual}", "{EoF}")) to context
+fun string(expected: String, message: String = "Character {actual} does not meet expected {expected}, partial match: {partial}") = simple<Char, String> {
+    var matched = mutableListOf<Char>()
+    for (expectedChar in expected) {
+        val ch = token()
+        when (ch) {
+            expectedChar -> matched += ch
+            else -> when {
+                matched.isEmpty() -> fail(message
+                    .replace("{actual}", ch.toString())
+                    .replace("{expected}", expectedChar.toString())
+                    .replace("{partial}", "<None>"))
+                else -> fail(message
+                    .replace("{actual}", ch.toString())
+                    .replace("{expected}", expectedChar.toString())
+                    .replace("{partial}", matched.joinToString("")))
             }
         }
-        return success(matched.joinToString("")) to current
     }
+    matched.joinToString("")
 }
 
 /**

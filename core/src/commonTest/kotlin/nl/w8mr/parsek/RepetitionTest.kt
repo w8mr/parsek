@@ -133,6 +133,13 @@ class RepetitionTest {
     }
 
     @Test
+    @JsName("UntilLazyChar")
+    fun `untilLazyChar`() {
+        val parser = letter until ','
+        parser.parse("abc,123,abc") shouldBe "abc"
+    }
+
+    @Test
     @JsName("UntilLazyFailing")
     fun `untilLazy failing`() {
         val parser = untilLazy(letter, char(','))

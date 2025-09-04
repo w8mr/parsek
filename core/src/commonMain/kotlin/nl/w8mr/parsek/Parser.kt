@@ -13,7 +13,7 @@ interface Parser<Token, R> {
     fun apply(context: Context<Token>): Pair<Result<R>, Context<Token>>
 
     fun success(value: R, subResults: List<Result<*>> = emptyList()) = Success(value, subResults)
-    fun failure(message: Any, subResults: List<Result<*>> = emptyList()) = Failure(message, subResults)
+    fun failure(error: Any, subResults: List<Result<*>> = emptyList()) = Failure(error, subResults)
 
     fun parse(context: Context<Token>): R {
         return apply(context).let { (result, new) ->
@@ -50,20 +50,13 @@ fun <Token, R> Parser<Token, R>.fold(
 fun <Token, R> Parser<Token, R>.parse(input: List<Token>) =
     this.parse(ListContext(input))
 
-fun <Token,  Type: Context<Token>, R : Any> token(kClass: KClass<R>) = object : Parser<Token, R> {
-        override fun apply(context: Context<Token>): Pair<Parser.Result<R>, Context<Token>> {
-            val (token, new) = context.token()
-            return when (token as? R) {
-                null -> {
-                    failure("token is not instance of ${kClass.simpleName}") to context
-                }
-
-                else -> {
-                    success(token) to new
-                }
-            }
-        }
+fun <Token: Any, R : Token> token(kClass: KClass<R>) = simple<Token, R> {
+    val token = token()
+    when {
+        kClass.isInstance(token) -> token as R
+        else -> fail("token is not instance of ${kClass.simpleName}")
     }
+}
 
 
 

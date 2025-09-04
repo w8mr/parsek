@@ -39,7 +39,7 @@ class CharTest {
     @JsName("CharDoesntMatchAnyCharacter")
     fun `char doesn't match any character`() {
         val parser = char
-        shouldThrowMessage<ParseException>("{EoF} found, not a regular character") {
+        shouldThrowMessage<ParseException>("No more tokens available") {
             parser.parse("")
         }
     }
