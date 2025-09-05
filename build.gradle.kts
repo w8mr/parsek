@@ -3,13 +3,13 @@ import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.JavadocJar
 
 group = "nl.w8mr.parsek"
-version = "0.2.2"
-
+version = scmVersion.version
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.dokka)
     alias(libs.plugins.publish)
+    alias(libs.plugins.axionRelease)
 
 }
 
