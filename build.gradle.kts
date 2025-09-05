@@ -17,6 +17,13 @@ val multiplatformId = libs.plugins.kotlinMultiplatform.get().pluginId
 val dokkaId = libs.plugins.dokka.get().pluginId
 val publishId = libs.plugins.publish.get().pluginId
 
+scmVersion {
+    repository {
+        // Only push tags, don't try to create GitHub releases
+        pushTagsOnly = true
+    }
+}
+
 subprojects {
     repositories {
         mavenCentral()
