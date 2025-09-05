@@ -106,7 +106,7 @@ fun <Token, R> untilLazy(
 fun <Token, R, S> sepByGreedy(
     parser: Parser<Token, R>,
     sep: Parser<Token, S>
-) = combi<Token, List<R>> {
+) = combi {
     val start = parser.bind()
     val others = zeroOrMore(seq(sep, parser) { _, p -> p }).bind()
     listOf(start) + others
@@ -115,7 +115,7 @@ fun <Token, R, S> sepByGreedy(
 fun <Token, R, S> sepByGreedyAllowEmpty(
     parser: Parser<Token, R>,
     sep: Parser<Token, S>
-) = combi<Token, List<R>> {
+) = combi {
     val start = when (val first = parser.bindAsResult()) {
         is Parser.Success -> first.value
         is Parser.Failure -> return@combi emptyList()
