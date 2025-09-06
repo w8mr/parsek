@@ -1,9 +1,9 @@
 package nl.w8mr.parsek
 
-import nl.w8mr.parsek.text.parse
 import nl.w8mr.parsek.text.letter
 import nl.w8mr.parsek.text.number
 import nl.w8mr.parsek.text.some
+import nl.w8mr.parsek.text.invoke
 
 import kotlin.test.Test
 import io.kotest.matchers.shouldBe
@@ -18,14 +18,14 @@ class MapTest {
         data class Container(val text: String)
 
         val parser = some(letter).map { Container(it) }
-        parser.parse("abc123") shouldBe Container("abc")
+        parser("abc123") shouldBe Container("abc")
     }
 
     @Test
     @JsName("FilterValues")
     fun `filter values`() {
         val parser = number filter { it < 25 }
-        parser.parse("12abc") shouldBe 12
+        parser("12abc") shouldBe 12
     }
 
     @Test
@@ -33,7 +33,7 @@ class MapTest {
     fun `filter values fails`() {
         val parser = number filter { it < 25 }
         shouldThrowMessage<ParseException>("Predicate not met") {
-            parser.parse("123abc")
+            parser("123abc")
         }
     }
 
@@ -43,7 +43,7 @@ class MapTest {
     fun `filter values fails with message`() {
         val parser = number.filter("Number not below 25") { it < 25 }
         shouldThrowMessage<ParseException>("Number not below 25") {
-            parser.parse("123abc")
+            parser("123abc")
         }
     }
 
@@ -51,14 +51,14 @@ class MapTest {
     @JsName("AsLiteral")
     fun `asLiteral`() {
         val parser: LiteralParser<Char> = number.asLiteral()
-        parser.parse("12abc") shouldBe Unit
+        parser("12abc") shouldBe Unit
     }
 
     @Test
     @JsName("LiteralAsValue")
     fun `literal as value`() {
         val parser = literal("true") value true
-        parser.parse("true 12") shouldBe true
+        parser("true 12") shouldBe true
     }
 
 

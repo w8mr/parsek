@@ -2,8 +2,8 @@ package nl.w8mr.parsek
 
 import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.test.shouldThrowMessage
+import nl.w8mr.parsek.text.CharSequenceContext
 import nl.w8mr.parsek.text.literal
-import nl.w8mr.parsek.text.parse
 import kotlin.js.JsName
 import kotlin.test.Test
 
@@ -12,14 +12,14 @@ class LiteralTest {
     @JsName("charLiteral")
     fun `char literal`() {
         val parser = literal('a')
-        parser.parse("abc") shouldBe Unit
+        parser(CharSequenceContext("abc")) shouldBe Unit
     }
 
     @Test
     @JsName("stringLiteral")
     fun `string literal`() {
         val parser = literal("abc")
-        parser.parse("abcdef") shouldBe Unit
+        parser(CharSequenceContext("abcdef")) shouldBe Unit
     }
 
     @Test
@@ -27,7 +27,7 @@ class LiteralTest {
     fun `string literal EoT`() {
         val parser = literal("abc")
         shouldThrowMessage<ParseException>("No more tokens available") {
-            parser.parse("ab") shouldBe Unit
+            parser(CharSequenceContext("ab")) shouldBe Unit
         }
     }
 
@@ -36,7 +36,7 @@ class LiteralTest {
     fun `string literal partial`() {
         val parser = literal("abc")
         shouldThrowMessage<ParseException>("Character d does not meet expected c, partial match: ab") {
-            parser.parse("abdef") shouldBe Unit
+            parser(CharSequenceContext("abdef")) shouldBe Unit
         }
     }
 
@@ -50,7 +50,7 @@ class LiteralTest {
     @JsName("token")
     fun `token`() {
         val parser = token<Suit, CLUBS>(CLUBS::class)
-        parser.parse(listOf(CLUBS, DIAMONDS, HEARTS, SPADES)) shouldBe CLUBS
+        parser.invoke(listOf(CLUBS, DIAMONDS, HEARTS, SPADES)) shouldBe CLUBS
     }
 
     @Test
@@ -58,7 +58,7 @@ class LiteralTest {
     fun `token  fail`() {
         val parser = token<Suit, DIAMONDS>(DIAMONDS::class)
         shouldThrowMessage<ParseException>("token is not instance of DIAMONDS") {
-            parser.parse(listOf(CLUBS, DIAMONDS, HEARTS, SPADES)) shouldBe Unit
+            parser.invoke(listOf(CLUBS, DIAMONDS, HEARTS, SPADES)) shouldBe Unit
         }
     }
 
@@ -66,7 +66,7 @@ class LiteralTest {
     @JsName("tokenLiteral")
     fun `token literal`() {
         val parser = literal<Suit, CLUBS>(CLUBS::class)
-        parser.parse(listOf(CLUBS, DIAMONDS, HEARTS, SPADES)) shouldBe Unit
+        parser.invoke(listOf(CLUBS, DIAMONDS, HEARTS, SPADES)) shouldBe Unit
     }
 
     @Test
@@ -74,7 +74,7 @@ class LiteralTest {
     fun `token literal fail`() {
         val parser = literal<Suit, DIAMONDS>(DIAMONDS::class)
         shouldThrowMessage<ParseException>("token is not instance of DIAMONDS") {
-            parser.parse(listOf(CLUBS, DIAMONDS, HEARTS, SPADES)) shouldBe Unit
+            parser.invoke(listOf(CLUBS, DIAMONDS, HEARTS, SPADES)) shouldBe Unit
         }
     }
 

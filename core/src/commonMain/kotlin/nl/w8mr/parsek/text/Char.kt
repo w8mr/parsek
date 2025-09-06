@@ -16,7 +16,7 @@ import nl.w8mr.parsek.some
  * <!--- ZIPDOK include src/commonTest/nl/w8mr/parsek/text/CharTest#char-literal -->
  * ```kotlin
  *    val parser = char('a')
- *    parser.parse("ab") shouldBe "a"
+ *    parser("ab") shouldBe "a"
  *  ```
  * <!--- ZIPDOK end -->
  */

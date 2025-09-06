@@ -2,8 +2,8 @@ package nl.w8mr.parsek
 
 import io.kotest.matchers.shouldBe
 import nl.w8mr.parsek.test.shouldThrowMessage
+import nl.w8mr.parsek.text.CharSequenceContext
 import nl.w8mr.parsek.text.char
-import nl.w8mr.parsek.text.parse
 import kotlin.js.JsName
 import kotlin.test.Test
 
@@ -17,7 +17,7 @@ class RefTest {
             val b = char('b')
 
         }
-        holder.c.parse("abc") shouldBe ("a" to "b")
+        holder.c(CharSequenceContext("abc")) shouldBe ("a" to "b")
     }
 
     @Test
@@ -27,12 +27,17 @@ class RefTest {
         val holder = object {
             val group: Parser<Char, Group> = seq(char('('), zeroOrMore(ref(::group)), char(')')) { _, g, _ -> Group(g) }
         }
-        holder.group.parse("()") shouldBe Group(emptyList())
-        holder.group.parse("(())") shouldBe Group(listOf(Group(emptyList())))
-        holder.group.parse("(()())") shouldBe Group(listOf(Group(emptyList()),Group(emptyList())))
-        holder.group.parse("(()(()))") shouldBe Group(listOf(Group(emptyList()),Group(listOf(Group(emptyList())))))
+        holder.group(CharSequenceContext("()")) shouldBe Group(emptyList())
+        holder.group(CharSequenceContext("(())")) shouldBe Group(listOf(Group(emptyList())))
+        holder.group(CharSequenceContext("(()())")) shouldBe Group(listOf(Group(emptyList()), Group(emptyList())))
+        holder.group(CharSequenceContext("(()(()))")) shouldBe Group(
+            listOf(
+                Group(emptyList()),
+                Group(listOf(Group(emptyList())))
+            )
+        )
         shouldThrowMessage<ParseException>("Combinator failed, parser number 3 with error: No more tokens available") {
-            holder.group.parse("(()(())")
+            holder.group(CharSequenceContext("(()(())"))
         }
 
 

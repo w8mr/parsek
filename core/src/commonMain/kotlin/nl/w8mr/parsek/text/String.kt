@@ -12,7 +12,7 @@ import nl.w8mr.parsek.simpleLiteral
  * <!--- ZIPDOK include src/commonTest/nl/w8mr/parsek/text/StringTest#string-fixed -->
  * ```kotlin
  *    val parser = string("add")
- *    parser.parse("add 1") shouldBe "add"
+ *    parser("add 1") shouldBe "add"
  *  ```
  * <!--- ZIPDOK end -->
  */
@@ -44,7 +44,7 @@ fun string(expected: String, message: String = "Character {actual} does not meet
  * <!--- ZIPDOK include src/commonTest/nl/w8mr/parsek/text/StringTest#string-fixed -->
  * ```kotlin
  *    val parser = string("add")
- *    parser.parse("add 1") shouldBe "add"
+ *    parser("add 1") shouldBe "add"
  *  ```
  * <!--- ZIPDOK end -->
  */

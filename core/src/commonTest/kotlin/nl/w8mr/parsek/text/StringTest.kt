@@ -11,7 +11,7 @@ class StringTest {
     @JsName("StringMatchesFixedString")
     fun `string matches fixed string`() {
         val parser = string("add")
-        parser.parse("add 1") shouldBe "add"
+        parser("add 1") shouldBe "add"
     }
 
     @Test
@@ -19,7 +19,7 @@ class StringTest {
     fun `string matches fixed string EoT`() {
         val parser = string("add")
         shouldThrowMessage<ParseException>("No more tokens available") {
-            parser.parse("ad") shouldBe "add"
+            parser("ad") shouldBe "add"
         }
     }
 
@@ -28,7 +28,7 @@ class StringTest {
     fun `string matches fixed string partial`() {
         val parser = string("add")
         shouldThrowMessage<ParseException>("Character c does not meet expected d, partial match: ad") {
-            parser.parse("adc 1") shouldBe "add"
+            parser("adc 1") shouldBe "add"
         }
     }
 

@@ -3,6 +3,7 @@ import nl.w8mr.parsek.*
 import kotlin.test.Test
 
 import nl.w8mr.parsek.text.*
+import nl.w8mr.parsek.text.invoke
 import nl.w8mr.parsek.test.shouldThrowMessage
 import kotlin.js.JsName
 
@@ -11,21 +12,21 @@ class RepetitionTest {
     @JsName("RepeatLetter")
     fun `repeat letter`() {
         val parser = repeat(letter)
-        parser.parse("abc123") shouldBe "abc"
+        parser("abc123") shouldBe "abc"
     }
 
     @Test
     @JsName("RepeatWithMaximum")
     fun `repeat with maximum`() {
         val parser = repeat(letter, 2)
-        parser.parse("abc123") shouldBe "ab"
+        parser("abc123") shouldBe "ab"
     }
 
     @Test
     @JsName("RepeatWithMinimum")
     fun `repeat with minimum`() {
         val parser = repeat(letter, min = 2)
-        parser.parse("abc123") shouldBe "abc"
+        parser("abc123") shouldBe "abc"
     }
 
     @Test
@@ -33,7 +34,7 @@ class RepetitionTest {
     fun `repeat with minimum failing`() {
         val parser = repeat(letter, min = 4)
         shouldThrowMessage<ParseException>("Repeat only 3 elements found, needed at least 4") {
-            parser.parse("abc123")
+            parser("abc123")
 
         }
     }
@@ -42,14 +43,14 @@ class RepetitionTest {
     @JsName("SomeLetters")
     fun `some letters`() {
         val parser = some(letter)
-        parser.parse("abc123") shouldBe "abc"
+        parser("abc123") shouldBe "abc"
     }
 
     @Test
     @JsName("SomeLettersTree")
     fun `some letters tree`() {
         val parser = some(letter)
-        val full = parser.parseTree("abc123")
+        val full = parser.parse("abc123")
         full.first shouldBe "abc"
         full.second shouldBe Parser.Success("abc", listOf(
             Parser.Success("a"),
@@ -63,7 +64,7 @@ class RepetitionTest {
     @JsName("SomeLettersAsStringTree")
     fun `some letters asString tree`() {
         val parser = some(letter)
-        val full = parser.parseTree("abc123")
+        val full = parser.parse("abc123")
         full.first shouldBe "abc"
         full.second shouldBe Parser.Success("abc", listOf(
             Parser.Success("a"),
@@ -78,7 +79,7 @@ class RepetitionTest {
     fun `some letters failing`() {
         val parser = some(letter)
         shouldThrowMessage<ParseException>("Repeat only 0 elements found, needed at least 1") {
-            parser.parse("123")
+            parser("123")
         }
     }
 
@@ -86,30 +87,30 @@ class RepetitionTest {
     @JsName("ZeroOrMoreEmpty")
     fun `zeroOrMore empty`() {
         val parser = zeroOrMore(letter)
-        parser.parse("123") shouldBe ""
+        parser("123") shouldBe ""
     }
 
     @Test
     @JsName("TimesPrefix")
     fun `times prefix`() {
         val parser = (4*letter)
-        parser.parse("abcdef") shouldBe "abcd"
+        parser("abcdef") shouldBe "abcd"
     }
 
     @Test
     @JsName("TimesPostfix")
     fun `times postfix`() {
         val parser = (digit*4)
-        parser.parse("123456") shouldBe "1234"
+        parser("123456") shouldBe "1234"
     }
 
     @Test
     @JsName("TimesRange")
     fun `times range`() {
         val parser = ((2..4)*letter)
-        parser.parse("abcdef") shouldBe "abcd"
+        parser("abcdef") shouldBe "abcd"
         shouldThrowMessage<ParseException>("Repeat only 1 elements found, needed at least 2") {
-            parser.parse("a12345")
+            parser("a12345")
 
         }
     }
@@ -122,21 +123,21 @@ class RepetitionTest {
             val digits = -some(digit)
             letters to digits
         }
-        parser.parse("abc123") shouldBe ("abc" to "123")
+        parser("abc123") shouldBe ("abc" to "123")
     }
 
     @Test
     @JsName("UntilLazy")
     fun `untilLazy`() {
         val parser = untilLazy(letter, char(','))
-        parser.parse("abc,123,abc") shouldBe ("abc" to ",")
+        parser("abc,123,abc") shouldBe ("abc" to ",")
     }
 
     @Test
     @JsName("UntilLazyChar")
     fun `untilLazyChar`() {
         val parser = letter until ','
-        parser.parse("abc,123,abc") shouldBe "abc"
+        parser("abc,123,abc") shouldBe "abc"
     }
 
     @Test
@@ -144,7 +145,7 @@ class RepetitionTest {
     fun `untilLazy failing`() {
         val parser = untilLazy(letter, char(','))
         shouldThrowMessage<ParseException>("Stop not found") {
-            parser.parse("abc123,123,abc")
+            parser("abc123,123,abc")
         }
     }
 
@@ -154,7 +155,7 @@ class RepetitionTest {
     fun `untilLazy less then minimum`() {
         val parser = untilLazy(letter, char(','), min = 4)
         shouldThrowMessage<ParseException>("Repeat only 3 elements found, needed at least 4") {
-            parser.parse("abc,123,abc")
+            parser("abc,123,abc")
         }
     }
 
@@ -162,7 +163,7 @@ class RepetitionTest {
     @JsName("UntilLazyOverMinimum")
     fun `untilLazy over minimum`() {
         val parser = untilLazy(letter, char(','), min = 2)
-        parser.parse("abc,123,abc") shouldBe ("abc" to ",")
+        parser("abc,123,abc") shouldBe ("abc" to ",")
 
     }
 
@@ -171,7 +172,7 @@ class RepetitionTest {
     fun `untilLazy over maximum`() {
         val parser = untilLazy(letter, char(','), max = 2)
         shouldThrowMessage<ParseException>("Stop not found") {
-            parser.parse("abc,123,abc")
+            parser("abc,123,abc")
         }
     }
 
@@ -179,14 +180,14 @@ class RepetitionTest {
     @JsName("SepByGreedy")
     fun `sepByGreedy`() {
         val parser = sepByGreedy(letter, char(','))
-        parser.parse("a,b,c") shouldBe listOf("a", "b", "c")
+        parser("a,b,c") shouldBe listOf("a", "b", "c")
     }
 
     @Test
     @JsName("SepByGreedyFailAfterSeparator")
     fun `sepByGreedy fail after separator`() {
         val parser = sepByGreedy(letter, char(',')) and char(',')
-        parser.parse("a,b,c,1") shouldBe (listOf("a", "b", "c") to ",")
+        parser("a,b,c,1") shouldBe (listOf("a", "b", "c") to ",")
     }
 
     @Test
@@ -194,7 +195,7 @@ class RepetitionTest {
     fun `sepByGreedy empty`() {
         val parser = sepByGreedy(letter, char(','))
         shouldThrowMessage<ParseException>("Combinator failed, parser number 1 with error: Character 1 is not a letter") {
-            parser.parse("1,2,3") shouldBe emptyList<String>()
+            parser("1,2,3") shouldBe emptyList<String>()
         }
     }
 
@@ -202,22 +203,21 @@ class RepetitionTest {
     @JsName("SepByGreedyAllowEmpty")
     fun `sepByGreedyAllowEmpty`() {
         val parser = sepByGreedyAllowEmpty(letter, char(','))
-        parser.parse("a,b,c") shouldBe listOf("a", "b", "c")
+        parser("a,b,c") shouldBe listOf("a", "b", "c")
     }
 
     @Test
     @JsName("SepByGreedyAllowEmptyFailAfterSeparator")
     fun `sepByGreedyAllowEmpty fail after separator`() {
         val parser = sepByGreedyAllowEmpty(letter, char(',')) and char(',')
-        parser.parse("a,b,c,1") shouldBe (listOf("a", "b", "c") to ",")
+        parser("a,b,c,1") shouldBe (listOf("a", "b", "c") to ",")
     }
 
     @Test
     @JsName("SepByGreedyAllowEmptyEmpty")
     fun `sepByGreedyAllowEmpty empty`() {
         val parser = sepByGreedyAllowEmpty(letter, char(','))
-        parser.parse("1,2,3") shouldBe emptyList<String>()
+        parser("1,2,3") shouldBe emptyList<String>()
     }
 
 }
-

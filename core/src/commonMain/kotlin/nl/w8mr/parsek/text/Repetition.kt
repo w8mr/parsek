@@ -6,7 +6,7 @@ fun <Token> repeat(
     parser: Parser<Token, String>,
     max: Int = Int.MAX_VALUE,
     min: Int = 0,
-) = direct <Token, String> {
+) = direct {
     nl.w8mr.parsek.repeat(parser, max, min).bindAsResult().map { it.joinToString("") }
 }
 

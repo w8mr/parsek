@@ -5,7 +5,6 @@ import kotlin.test.assertEquals
 import nl.w8mr.parsek.*
 import nl.w8mr.parsek.text.AocTests.CellType.*
 import nl.w8mr.parsek.text.AocTests.Direction.*
-import nl.w8mr.parsek.text.AocTests.State
 import kotlin.js.JsName
 
 class AocTests {
@@ -23,7 +22,7 @@ class AocTests {
 292: 11 6 16 20
 """
         val parser = some(number and ": " and (number sepBy ' ') and '\n')
-        val parsed = parser.parse(example)
+        val parsed = parser(CharSequenceContext(example))
         assertEquals(
             listOf(
                 190 to listOf(10, 19),
@@ -64,7 +63,7 @@ Prize: X=18641, Y=10279
         val prize = "Prize: X=" and number and ", Y=" and number and '\n'
         val behavior = buttonA and buttonB and prize
         val parser = behavior sepBy '\n'
-        val parsed = parser.parse(example)
+        val parsed = parser(CharSequenceContext(example))
         assertEquals(
             listOf(
                 ((94 to 34) to (22 to 67) to (8400 to 5400)),
@@ -94,7 +93,7 @@ p=9,5 v=-3,-3
 
         val vec2 = signedNumber and ',' and signedNumber
         val parser = "p=" and vec2 and " v=" and vec2 sepBy '\n'
-        val parsed = parser.parse(example)
+        val parsed = parser(CharSequenceContext(example))
         assertEquals(
             listOf(
                 (0 to 4) to (3 to -3),
@@ -153,7 +152,7 @@ p=9,5 v=-3,-3
         val instructions = some(instruction) sepBy '\n' map { it.flatten() }
         val parser = grid and instructions
 
-        val parsed = parser.parse(smallExample)
+        val parsed = parser(CharSequenceContext(smallExample))
         assertEquals(listOf(
             listOf(Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall),
             listOf(Wall, Empty, Empty, Box, Empty, Box, Empty, Wall),
@@ -183,7 +182,7 @@ p=9,5 v=-3,-3
         val registers = register('A') and register('B') and register('C') map (::State)
         val program = "Program: " and ((number and ',' and number) sepBy ",")
         val parser = registers and '\n' and program
-        val parsed = parser.parse(example)
+        val parsed = parser(CharSequenceContext(example))
         assertEquals(State(729, 0, 0), parsed.first)
         assertEquals(listOf(0 to 1, 5 to 4, 3 to 0), parsed.second)
     }
@@ -255,6 +254,6 @@ p=9,5 v=-3,-3
         val gate = wire and " " and operation and " " and wire and " -> " and wire map (::Gate)
         val gatesParser = (gate sepBy "\n").map { it.map { it.outWire to it}.toMap() }
         val parser = inputs and "\n" and gatesParser
-        println(parser.parse(example))
+        println(parser(CharSequenceContext(example)))
     }
 }

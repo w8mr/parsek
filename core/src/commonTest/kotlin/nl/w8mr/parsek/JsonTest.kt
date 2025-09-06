@@ -75,7 +75,7 @@ class JsonTest {
                 "de": 12.34e2
             }
         """.trimIndent()
-        parser.json.parse(example) shouldBe mapOf(
+        parser.json(example) shouldBe mapOf(
             "s" to "string",
             "o" to mapOf("s" to "string"),
             "oe" to emptyMap<String, String>(),

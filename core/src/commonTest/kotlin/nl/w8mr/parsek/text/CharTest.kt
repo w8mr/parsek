@@ -4,6 +4,7 @@ import nl.w8mr.parsek.ParseException
 
 import nl.w8mr.parsek.test.shouldThrowMessage
 import io.kotest.matchers.shouldBe
+import nl.w8mr.parsek.or
 import kotlin.js.JsName
 import kotlin.test.Test
 
@@ -13,7 +14,7 @@ class CharTest {
     fun `char matches fixed char`() {
 // ZIPDOK start char-fixed
         val parser = char('a')
-        parser.parse("ab") shouldBe "a"
+        parser("ab") shouldBe "a"
 // ZIPDOK end char-fixed
     }
 
@@ -22,7 +23,7 @@ class CharTest {
     fun `char doesn't match fixed char`() {
         val parser = char('b')
         shouldThrowMessage<ParseException>("Character a does not meet expected b") {
-            parser.parse("ab")
+            parser("ab")
         }
     }
 
@@ -31,7 +32,7 @@ class CharTest {
     fun `char matches any character`() {
 // ZIPDOK start any-char-literal
         val parser = anyChar
-        parser.parse("★☆") shouldBe "★"
+        parser("★☆") shouldBe "★"
 // ZIPDOK end any-char-literal
     }
 
@@ -40,7 +41,7 @@ class CharTest {
     fun `char doesn't match any character`() {
         val parser = anyChar
         shouldThrowMessage<ParseException>("No more tokens available") {
-            parser.parse("")
+            parser("")
         }
     }
 
@@ -48,7 +49,7 @@ class CharTest {
     @JsName("CharMathcesPredicate")
     fun `char mathces predicate`() {
         val parser = char { it.isLetter() }
-        parser.parse("ab") shouldBe "a"
+        parser("ab") shouldBe "a"
     }
 
     @Test
@@ -56,7 +57,7 @@ class CharTest {
     fun `char doesn't match predicate`() {
         val parser = char { it.isLetter()}
         shouldThrowMessage<ParseException>("Character 1 does not meet predicate") {
-            parser.parse("12")
+            parser("12")
         }
     }
 
@@ -64,7 +65,7 @@ class CharTest {
     @JsName("CharMathcesLetter")
     fun `char mathces letter`() {
         val parser = letter
-        parser.parse("ab") shouldBe "a"
+        parser("ab") shouldBe "a"
     }
 
     @Test
@@ -72,7 +73,7 @@ class CharTest {
     fun `char doesn't match letter`() {
         val parser = letter
         shouldThrowMessage<ParseException>("Character 1 is not a letter") {
-            parser.parse("12")
+            parser("12")
         }
     }
 
@@ -80,7 +81,7 @@ class CharTest {
     @JsName("CharMathcesDigit")
     fun `char mathces digit`() {
         val parser = digit
-        parser.parse("12") shouldBe "1"
+        parser("5abc") shouldBe "5"
     }
 
     @Test
@@ -88,7 +89,7 @@ class CharTest {
     fun `char doesn't match digit`() {
         val parser = digit
         shouldThrowMessage<ParseException>("Character a is not a digit") {
-            parser.parse("ab")
+            parser("ab")
         }
     }
 
@@ -96,7 +97,25 @@ class CharTest {
     @JsName("MatchesNumber")
     fun `matches number`() {
         val parser = number
-        parser.parse("12ab") shouldBe 12
+        parser("123abc") shouldBe 123
     }
+
+    @Test
+    @JsName("MatchesIdentifier")
+    fun `matches identifier`() {
+        val identifier = letter and some(letter or digit)
+        identifier("abc123") shouldBe "abc123"
+    }
+
+    @Test
+    @JsName("MatchesSignedNumber")
+    fun `matches signed number`() {
+        val parser = signedNumber
+        parser("-42") shouldBe -42
+        parser("17") shouldBe 17
+    }
+
+
+
 
 }
