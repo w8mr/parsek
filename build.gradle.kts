@@ -1,13 +1,20 @@
 import com.vanniktech.maven.publish.SonatypeHost
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.JavadocJar
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
 group = "nl.w8mr.parsek"
 version = scmVersion.version
 
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.dokka)
+//    alias(libs.plugins.dokkaJavadoc)
     alias(libs.plugins.publish)
     alias(libs.plugins.axionRelease)
 
@@ -15,6 +22,7 @@ plugins {
 
 val multiplatformId = libs.plugins.kotlinMultiplatform.get().pluginId
 val dokkaId = libs.plugins.dokka.get().pluginId
+//val dokkaJavadocId = libs.plugins.dokkaJavadoc.get().pluginId
 val publishId = libs.plugins.publish.get().pluginId
 
 scmVersion {
@@ -24,14 +32,23 @@ scmVersion {
     }
 }
 
+
 subprojects {
-    repositories {
-        mavenCentral()
-    }
 
     apply(plugin = publishId)
     apply(plugin = multiplatformId)
     apply(plugin = dokkaId)
+    //apply(plugin = dokkaJavadocId)
+
+    dokka {
+        moduleName.set("Parsek")
+        dokkaPublications.html {
+            suppressInheritedMembers.set(true)
+            failOnWarning.set(true)
+        }
+
+
+    }
 
     mavenPublishing {
         configure(KotlinMultiplatform(

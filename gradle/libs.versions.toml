@@ -13,5 +13,6 @@ kotest = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+dokkaJavadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
 axionRelease = { id = "pl.allegro.tech.build.axion-release", version.ref = "axion"}
