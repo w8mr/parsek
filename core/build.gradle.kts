@@ -1,3 +1,28 @@
+plugins {
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.dokkaJavadoc)
+}
+
+dokka {
+        moduleName.set("Parsek core")
+        dokkaPublications.html {
+            suppressInheritedMembers.set(true)
+            failOnWarning.set(true)
+        }
+        dokkaPublications.javadoc {
+            suppressInheritedMembers.set(true)
+            failOnWarning.set(true)
+        }
+
+
+    }
+
+tasks.register<Jar>("dokkaJavadocJar") {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
 repositories {
     mavenCentral()
     mavenLocal()
