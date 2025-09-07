@@ -4,6 +4,7 @@ kotest = "5.9.1"
 dokka = "2.0.0"
 publish = "0.34.0"
 axion = "1.20.1"
+jupyter = "0.15.0-614-1"
 
 
 [libraries]
@@ -13,6 +14,6 @@ kotest = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-dokkaJavadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
 axionRelease = { id = "pl.allegro.tech.build.axion-release", version.ref = "axion"}
+jupyterApi = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "jupyter" }

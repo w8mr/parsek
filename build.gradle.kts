@@ -8,13 +8,13 @@ repositories {
 plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.dokka)
-    alias(libs.plugins.dokkaJavadoc)
     id("maven-publish")
     id("signing")
     alias(libs.plugins.axionRelease)
 }
 
 val multiplatformId = libs.plugins.kotlinMultiplatform.get().pluginId
+val dokkaId = libs.plugins.dokka.get().pluginId
 
 scmVersion {
     repository {
@@ -24,24 +24,15 @@ scmVersion {
 
 version = scmVersion.version
 
-dokka {
-    moduleName.set("Parsek")
-    dokkaPublications.html {
-        suppressInheritedMembers.set(true)
-        failOnWarning.set(true)
-    }
-    dokkaPublications.javadoc {
-        suppressInheritedMembers.set(true)
-        failOnWarning.set(true)
-    }
-}
-
 subprojects {
     project.version = rootProject.version
 
     apply(plugin = multiplatformId)
+    // Only apply the standard dokka plugin, not dokka-javadoc
+    apply(plugin = dokkaId)
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
+
 
     publishing {
         publications {
