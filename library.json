@@ -1,0 +1,13 @@
+{
+  "name": "parsek",
+  "version": "0.1.0",
+  "description": "Parsek parser combinator library with Jupyter notebook renderer",
+  "renderers": [
+    {
+      "type": "kotlin",
+      "class": "nl.w8mr.parsek.Parser.Result",
+      "file": "core/src/commonMain/kotlin/nl/w8mr/parsek/Parser.kt"
+    }
+  ]
+}
+
