@@ -76,8 +76,8 @@ subprojects {
                 name = "MavenCentral"
                 url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
-                    username = System.getenv("OSSRH_USERNAME") ?: ""
-                    password = System.getenv("OSSRH_PASSWORD") ?: ""
+                    username = System.getenv("ORG_GRADLE_PROJECT_mavenCentralUsername") ?: ""
+                    password = System.getenv("ORG_GRADLE_PROJECT_mavenCentralPassword") ?: ""
                 }
             }
         }
