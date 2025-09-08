@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.dokka)
-    alias(libs.plugins.jupyterApi)
+    kotlin("jupyter.api") version "${libs.versions.jupyter.get()}"
+
 }
 
 repositories {
@@ -33,6 +34,11 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.kotest)
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlin-jupyter-api:\"${libs.versions.jupyter.get()}\"")
             }
         }
     }

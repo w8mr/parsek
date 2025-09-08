@@ -4,9 +4,6 @@ import nl.w8mr.parsek.Parser.Failure
 import nl.w8mr.parsek.Parser.Success
 import kotlin.jvm.JvmName
 import kotlin.reflect.KClass
-import org.jetbrains.kotlinx.jupyter.api.DisplayResult
-import org.jetbrains.kotlinx.jupyter.api.Renderer
-import org.jetbrains.kotlinx.jupyter.api.libraries.renderers
 
 interface Parser<Token, R> {
 
@@ -62,45 +59,4 @@ fun <Token: Any, R : Token> token(kClass: KClass<R>) = simple<Token, R> {
         kClass.isInstance(token) -> token as? R ?: fail("token is not instance of ${kClass.simpleName}")
         else -> fail("token is not instance of ${kClass.simpleName}")
     }
-}
-
-// Jupyter notebook renderer for Parser.Result
-@Suppress("unused")
-@JvmName("ParsekNotebookRenderers")
-
-fun renderResult(result: Parser.Result<*>): String {
-    fun renderSubresults(subresults: List<Parser.Result<*>>): String {
-        if (subresults.isEmpty()) return ""
-        return """
-            <details style="margin-left:1em" closed>
-                <summary>Subresults (${subresults.size})</summary>
-                <ul>
-                    ${subresults.joinToString("") { "<li>${renderResult(it)}</li>" }}
-                </ul>
-            </details>
-        """.trimIndent()
-    }
-    return when (result) {
-        is Parser.Success<*> -> """
-            <div>
-                <b>Success:</b> ${result.value}
-                ${renderSubresults(result.subResults)}
-            </div>
-        """.trimIndent()
-        is Parser.Failure -> """
-            <div>
-                <b>Failure:</b> ${result.error}
-                ${renderSubresults(result.subResults)}
-            </div>
-        """.trimIndent()
-    }
-}
-
-// Register renderer for Jupyter
-val parsekResultRenderer: Renderer<Parser.Result<*>> = { result ->
-    DisplayResult.html(renderResult(result))
-}
-
-val renderers = renderers {
-    register<Parser.Result<*>>(parsekResultRenderer)
 }
