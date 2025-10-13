@@ -11,6 +11,9 @@ plugins {
     id("maven-publish")
     id("signing")
     alias(libs.plugins.axionRelease)
+
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
+
 }
 
 val multiplatformId = libs.plugins.kotlinMultiplatform.get().pluginId
@@ -19,6 +22,36 @@ val dokkaId = libs.plugins.dokka.get().pluginId
 scmVersion {
     repository {
         pushTagsOnly = true
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "Sonatype"
+            url = uri(
+                if (version.toString().endsWith("SNAPSHOT"))
+                    "https://central.sonatype.com/repository/maven-snapshots/"
+                else
+                    "https://ossrh-staging-api.central.sonatype.com/service/local/"
+            )
+            credentials {
+                username = System.getenv("ORG_GRADLE_PROJECT_sonatypeUsername")
+                password = System.getenv("ORG_GRADLE_PROJECT_sonatypePassword")
+            }
+        }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        // see https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuration
+        sonatype {
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+            username = System.getenv("ORG_GRADLE_PROJECT_sonatypeUsername")
+            password = System.getenv("ORG_GRADLE_PROJECT_sonatypePassword")
+        }
     }
 }
 
@@ -37,7 +70,7 @@ subprojects {
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                from(components.findByName("kotlin") ?: components["java"])
+                from(components["kotlin"]) // Use only the kotlin component
                 groupId = "nl.w8mr.parsek"
                 version = project.version.toString() // Use Axion plugin version
                 pom {
@@ -71,16 +104,7 @@ subprojects {
                 }
             }
         }
-        repositories {
-            maven {
-                name = "MavenCentral"
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = System.getenv("ORG_GRADLE_PROJECT_mavenCentralUsername") ?: ""
-                    password = System.getenv("ORG_GRADLE_PROJECT_mavenCentralPassword") ?: ""
-                }
-            }
-        }
+
     }
 
     signing {
