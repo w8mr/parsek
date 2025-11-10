@@ -1,7 +1,7 @@
 # Parsek
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/w8mr/parsek/.github%2Fworkflows%2Frelease.yaml)
-[![Maven Central](https://img.shields.io/maven-central/v/nl.w8mr.parsek/core)](https://search.maven.org/search?q=g:nl.w8mr.parsek%20AND%20a:core)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/w8mr/parsek/.github%2Fworkflows%2Frelease.yaml)](https://github.com/w8mr/parsek/actions)
+[![Maven Central](https://img.shields.io/maven-central/v/nl.w8mr.parsek/core)](https://mvnrepository.com/artifact/nl.w8mr.parsek/core/latest)
 [![License](https://img.shields.io/github/license/w8mr/parsek)](LICENSE)
 
 Parsek is a library for (and written in) Kotlin for easily building parser combinators. It is based on JParsec and (Haskell) Parsec. It allows you to create a text (or token) parser based on easy-to-combine building blocks.
@@ -56,7 +56,7 @@ Add Parsek to your project using **Gradle** or **Maven**.
 
 ```groovy
 dependencies {
-    implementation 'nl.w8mr:parsek:<latest-version>'
+    implementation 'nl.w8mr.parsek:core:<latest-version>'
 }
 ```
 
@@ -64,8 +64,8 @@ dependencies {
 
 ```xml
 <dependency>
-  <groupId>nl.w8mr</groupId>
-  <artifactId>parsek</artifactId>
+  <groupId>nl.w8mr.parsek</groupId>
+  <artifactId>core</artifactId>
   <version><!-- latest-version --></version>
 </dependency>
 ```
@@ -79,7 +79,7 @@ Replace `<latest-version>` with the version shown in the badge above.
 Here's a minimal example to get you started:
 
 ```kotlin
-import nl.w8mr.parsek.text.*
+//import nl.w8mr.parsek.text.*
 
 val parser = number // Parses a sequence of digits as an Int
 val result = parser("123abc") // result: 123

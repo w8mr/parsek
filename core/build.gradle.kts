@@ -36,10 +36,5 @@ kotlin {
                 implementation(libs.kotest)
             }
         }
-        val jvmMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlin-jupyter-api:\"${libs.versions.jupyter.get()}\"")
-            }
-        }
     }
 }
