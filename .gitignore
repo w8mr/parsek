@@ -1,6 +1,7 @@
 .gradle
 .idea
 .kotlin
+ .DS_Store
 ~$*
 build
 .DS_Store
