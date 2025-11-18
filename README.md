@@ -4,7 +4,13 @@
 [![Maven Central](https://img.shields.io/maven-central/v/nl.w8mr.parsek/core)](https://mvnrepository.com/artifact/nl.w8mr.parsek/core/latest)
 [![License](https://img.shields.io/github/license/w8mr/parsek)](LICENSE)
 
-Parsek is a library for (and written in) Kotlin for easily building parser combinators. It is based on JParsec and (Haskell) Parsec. It allows you to create a text (or token) parser based on easy-to-combine building blocks.
+## What is Parsek?
+
+Parsek is a library for (and written in) Kotlin for easily building parser combinators. It is based on JParsec and (Haskell) Parsec. It allows you to create a text (or token) parser based on easy-to-combine building blocks. It is designed to be:
+
+- **Declarative:** Define parsers in a readable and composable way.
+- **Flexible:** Parse both text and token streams.
+- **Lightweight:** Minimal dependencies and easy to integrate into Kotlin projects.
 
 ---
 
@@ -22,16 +28,6 @@ Parsek is a library for (and written in) Kotlin for easily building parser combi
 - [Contribution Guidelines](#contribution-guidelines)
 - [License](#license)
 - [Links & Documentation](#links--documentation)
-
----
-
-## What is Parsek?
-
-Parsek is a functional parser combinator library that provides tools to construct complex parsers by combining smaller, reusable components. It is designed to be:
-
-- **Declarative:** Define parsers in a readable and composable way.
-- **Flexible:** Parse both text and token streams.
-- **Lightweight:** Minimal dependencies and easy to integrate into Kotlin projects.
 
 ---
 
@@ -103,12 +99,11 @@ At its core, Parsek operates on the concept of a `Parser`. A `Parser` is a funct
 
 ```kotlin
 interface Parser<Token, R> {
-    fun apply(source: ParserSource<Token>): Result<R>
+    fun apply(context: Context<Token>): Pair<Result<R>, Context<Token>>
 
-    sealed class Result<R> {
-        data class Success<R>(val value: R) : Result<R>()
-        data class Failure<R>(val message: String) : Result<R>()
-    }
+    sealed class Result<out R>(open val subResults: List<Result<*>> = emptyList())
+    data class Success<R>(val value: R, override val subResults: List<Result<*>> = emptyList()) : Result<R>(subResults)
+    data class Failure(val error: Any, override val subResults: List<Result<*>> = emptyList()) : Result<Nothing>(subResults)
 }
 ```
 
@@ -188,15 +183,6 @@ val numberList = number sepBy comma
 numberList("123,45,6") // Success: ([123, 45, 6], "")
 ```
 
-#### Text-Specific Parsing
-
-Using the `text` package, the same parser can be written more concisely:
-
-```kotlin
-val numberList = string("123,45,6")
-numberList("123,45,6") // Success: ([123, 45, 6], "")
-```
-
 ---
 
 ### Parsing Nested Structures
@@ -215,13 +201,6 @@ list("[1,[2,3],4]") shouldBe
         listOf(1, listOf(2, 3), 4)
 ```
 
-#### Text-Specific Parsing
-
-```kotlin
-val list = string("[1,[2,3],4]")
-list("[1,[2,3],4]") // Success: ([1, [2, 3], 4], "")
-```
-
 ---
 
 ## Error Handling
@@ -237,18 +216,6 @@ For example:
 val parser = char('a')
 parser("b") // Failure: Expected 'a', but found 'b'.
 ```
-
----
-
-## Distinction Between General and Text-Specific Parsing
-
-### General Parsing
-
-General parsers operate on any sequence of tokens. You define what a "token" is, making these parsers highly flexible for non-text inputs (e.g., token streams from a lexer).
-
-### Text-Specific Parsing
-
-Text parsers are optimized for `CharSequence` inputs. They provide utilities for common text-parsing tasks, such as matching characters, strings, or patterns. These parsers are more concise and easier to use for text-based grammars.
 
 ---
 
